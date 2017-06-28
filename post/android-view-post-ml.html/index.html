@@ -1,0 +1,850 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,View,Handler,MemoryLeak,AsyncLoadView," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/uploads/avatar.png?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="##简述：  写这篇文章的缘由是最近项目中查内存泄漏时，发现最终原因是由于异步线程调用View的的post方法导致的。为何我会使用异步线程调用View的post方法，是因为项目中需要用到很多复杂的自定义布局，需要提前解析进入内存，防止在主线程解析导致卡顿，具体的实现方法是在Application启动的时候，使用异步线程解析这些布局，等需要使用的时候直接从内存中拿来用。造成内存泄漏的原因，需要先分析">
+<meta name="keywords" content="Android,View,Handler,MemoryLeak,AsyncLoadView">
+<meta property="og:type" content="article">
+<meta property="og:title" content="View#post与Handler#post的区别，以及导致的内存泄漏分析">
+<meta property="og:url" content="http://yoursite.com/post/android-view-post-ml.html/index.html">
+<meta property="og:site_name" content="良秋的博客">
+<meta property="og:description" content="##简述：  写这篇文章的缘由是最近项目中查内存泄漏时，发现最终原因是由于异步线程调用View的的post方法导致的。为何我会使用异步线程调用View的post方法，是因为项目中需要用到很多复杂的自定义布局，需要提前解析进入内存，防止在主线程解析导致卡顿，具体的实现方法是在Application启动的时候，使用异步线程解析这些布局，等需要使用的时候直接从内存中拿来用。造成内存泄漏的原因，需要先分析">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4307880-1a6706a82e0422f7?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4307880-f0f0d8d49dca3726?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4307880-414f51f54ca1a134?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4307880-4beb3d41c1eee3c3?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4307880-e9cd2e91ee579fd2?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4307880-f56ca49e7a1012f1?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4307880-d1988a7f52da5ef3?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-06-28T09:27:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="View#post与Handler#post的区别，以及导致的内存泄漏分析">
+<meta name="twitter:description" content="##简述：  写这篇文章的缘由是最近项目中查内存泄漏时，发现最终原因是由于异步线程调用View的的post方法导致的。为何我会使用异步线程调用View的post方法，是因为项目中需要用到很多复杂的自定义布局，需要提前解析进入内存，防止在主线程解析导致卡顿，具体的实现方法是在Application启动的时候，使用异步线程解析这些布局，等需要使用的时候直接从内存中拿来用。造成内存泄漏的原因，需要先分析">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/4307880-1a6706a82e0422f7?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/post/android-view-post-ml.html/"/>
+
+
+
+
+
+  <title>View#post与Handler#post的区别，以及导致的内存泄漏分析 | 良秋的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">良秋的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">小小Android程序员</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/post/android-view-post-ml.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="良秋">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="良秋的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">View#post与Handler#post的区别，以及导致的内存泄漏分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-28T17:11:52+08:00">
+                2017-06-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/View/" itemprop="url" rel="index">
+                    <span itemprop="name">View</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>##简述：</p>
+<blockquote>
+<p>写这篇文章的缘由是最近项目中查内存泄漏时，发现最终原因是由于异步线程调用View的的post方法导致的。<br>为何我会使用异步线程调用View的post方法，是因为项目中需要用到很多复杂的自定义布局，需要提前解析进入内存，防止在主线程解析导致卡顿，具体的实现方法是在Application启动的时候，使用异步线程解析这些布局，等需要使用的时候直接从内存中拿来用。<br>造成内存泄漏的原因，需要先分析View的post方法执行流程，也就是文章前半部分的内容</p>
+</blockquote>
+<p>##文章内容：</p>
+<ol>
+<li>View#post方法作用以及实现源码</li>
+<li>View#post与Handler#post的区别</li>
+<li>分析View#post方法导致的内存泄漏</li>
+</ol>
+<h3 id="post方法分析"><a href="#post方法分析" class="headerlink" title="post方法分析"></a>post方法分析</h3><p>看看View的post方法注释：</p>
+<blockquote>
+<p>Causes the Runnable to be added to the message queue. The runnable will be run on the user interface thread</p>
+</blockquote>
+<p>意思是将runnable加入到消息队列中，该runnable将会在用户界面线程中执行，也就是UI线程。这解释，和Handler的作用差不多，然而事实并非如此。</p>
+<p>再看看post方法的源码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public boolean post(Runnable action) &#123;</div><div class="line">    final AttachInfo attachInfo = mAttachInfo;</div><div class="line">    if (attachInfo != null) &#123;</div><div class="line">	    // 如果当前View加入到了window中，直接调用UI线程的Handler发送消息</div><div class="line">        return attachInfo.mHandler.post(action);</div><div class="line">    &#125;</div><div class="line">    // Assume that post will succeed later</div><div class="line">    // View未加入到window，放入ViewRootImpl的RunQueue中</div><div class="line">    ViewRootImpl.getRunQueue().post(action);</div><div class="line">    return true;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>分两种情况，当View已经attach到window，直接调用UI线程的Handler发送runnable。如果View还未attach到window，将runnable放入ViewRootImpl的RunQueue中。</p>
+<p><strong>那么post到RunQueue里的runnable什么时候执行呢，又是为何当View还没attach到window的时候，需要post到RunQueue中。</strong></p>
+<h3 id="View-post与Handler-post的区别"><a href="#View-post与Handler-post的区别" class="headerlink" title="View#post与Handler#post的区别"></a>View#post与Handler#post的区别</h3><p>其实，当View已经attach到了window，两者是没有区别的，都是调用UI线程的Handler发送runnable到MessageQueue，最后都是由<strong>handler进行消息的分发处理</strong>。</p>
+<p>但是如果View尚未attach到window的话，runnable被放到了ViewRootImpl#RunQueue中，最终也会被处理，但不是通过MessageQueue。</p>
+<p>ViewRootImpl#RunQueue源码注释如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * The run queue is used to enqueue pending work from Views when no Handler is</div><div class="line"> * attached.  The work is executed during the next call to performTraversals on</div><div class="line"> * the thread.</div><div class="line"> * @hide</div><div class="line"> */</div></pre></td></tr></table></figure></p>
+<p>大概意思是当视图树尚未attach到window的时候，整个视图树是没有Handler的（其实自己可以new，这里指的handler是AttachInfo里的），这时候用RunQueue来实现延迟执行runnable任务，并且runnable最终不会被加入到MessageQueue里，也不会被Looper执行，而是等到ViewRootImpl的下一个performTraversals时候，把RunQueue里的所有runnable都拿出来并执行，接着清空RunQueue。</p>
+<p>由此可见RunQueue的作用类似于MessageQueue，只不过，这里面的所有<br>runnable最后的执行时机，是在下一个performTraversals到来的时候，MessageQueue里的消息处理的则是下一次loop到来的时候。RunQueue源码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line">static final class RunQueue &#123;</div><div class="line">	// 存放所有runnable，HandlerAction是对runnable的包装对象</div><div class="line">    private final ArrayList&lt;HandlerAction&gt; mActions = new ArrayList&lt;HandlerAction&gt;();</div><div class="line"></div><div class="line">	// view没有attach到window的时候，View#post最终调用到这</div><div class="line">    void post(Runnable action) &#123;</div><div class="line">        postDelayed(action, 0);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	// view没有attach到window的时候，View#postDelay最终调用到这</div><div class="line">    void postDelayed(Runnable action, long delayMillis) &#123;</div><div class="line">        HandlerAction handlerAction = new HandlerAction();</div><div class="line">        handlerAction.action = action;</div><div class="line">        handlerAction.delay = delayMillis;</div><div class="line"></div><div class="line">        synchronized (mActions) &#123;</div><div class="line">            mActions.add(handlerAction);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	// 移除一个runnable任务，</div><div class="line">	// view没有attach到window的时候，View#removeCallbacks最终调用到这</div><div class="line">    void removeCallbacks(Runnable action) &#123;</div><div class="line">        final HandlerAction handlerAction = new HandlerAction();</div><div class="line">        handlerAction.action = action;</div><div class="line"></div><div class="line">        synchronized (mActions) &#123;</div><div class="line">            final ArrayList&lt;HandlerAction&gt; actions = mActions;</div><div class="line"></div><div class="line">            while (actions.remove(handlerAction)) &#123;</div><div class="line">                // Keep going</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	// 取出所有的runnable并执行，接着清空RunQueue集合</div><div class="line">    void executeActions(Handler handler) &#123;</div><div class="line">        synchronized (mActions) &#123;</div><div class="line">            final ArrayList&lt;HandlerAction&gt; actions = mActions;</div><div class="line">            final int count = actions.size();</div><div class="line"></div><div class="line">            for (int i = 0; i &lt; count; i++) &#123;</div><div class="line">                final HandlerAction handlerAction = actions.get(i);</div><div class="line">                handler.postDelayed(handlerAction.action, handlerAction.delay);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            actions.clear();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	// 对runnable的封装类，记录runnable以及delay时间</div><div class="line">    private static class HandlerAction &#123;</div><div class="line">        Runnable action;</div><div class="line">        long delay;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public boolean equals(Object o) &#123;</div><div class="line">            if (this == o) return true;</div><div class="line">            if (o == null || getClass() != o.getClass()) return false;</div><div class="line"></div><div class="line">            HandlerAction that = (HandlerAction) o;</div><div class="line">            return !(action != null ? !action.equals(that.action) : that.action != null);</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public int hashCode() &#123;</div><div class="line">            int result = action != null ? action.hashCode() : 0;</div><div class="line">            result = 31 * result + (int) (delay ^ (delay &gt;&gt;&gt; 32));</div><div class="line">            return result;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>再看看RunQueue里的消息处理位置，ViewRootImpl#performTraversals：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">private void performTraversals() &#123;</div><div class="line">	</div><div class="line">	// ....</div><div class="line"></div><div class="line">    // Execute enqueued actions on every traversal in case a detached view enqueued an action</div><div class="line">    getRunQueue().executeActions(mAttachInfo.mHandler);</div><div class="line"></div><div class="line">	// ....</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>也就是说，<strong>当View没有被attach到window的时候，最后runnable的处理不是通过MessageQueue，而是ViewRootImpl自己在下一个performTraversals到来的时候执行</strong>。</p>
+<p>为了验证RunQueue里的runnable是在下一个performTraversals到来的时候执行的，做一个测试（在Activity的onCreate方法中）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">// Activity的跟布局</div><div class="line">ViewGroup viewGroup = (ViewGroup) getWindow().getDecorView();</div><div class="line">// 自己new的一个View，等待attach到window中</div><div class="line">final View view = new View(getApplicationContext()) &#123;</div><div class="line">    @Override</div><div class="line">    protected void onLayout(boolean changed, int left, int top, int right, int bottom) &#123;</div><div class="line">        super.onLayout(changed, left, top, right, bottom);</div><div class="line">        // view执行了layout</div><div class="line">        Log.e(TAG, &quot;view layout&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// 在View未attach到window上之前，</div><div class="line">// 使用Handler#post发送一个runnable（最终到了MessageQueue中）</div><div class="line">mHandler.post(new Runnable() &#123;</div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        // 获取View的宽高，查看View是否已经layout</div><div class="line">        Log.e(TAG, &quot;MessageQueue runnable, view width = &quot; + view.getWidth() + &quot;  height = &quot; + view.getHeight());</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">// 在View未attach到window上之前，</div><div class="line">// 使用View#post发送一个runnable（最终到了ViewRootImpl#RunQueue中）</div><div class="line">view.post(new Runnable() &#123;</div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        // 获取View的宽高，查看View是否已经layout</div><div class="line">        Log.e(TAG, &quot;RunQueue runnable, view width = &quot; + view.getWidth() + &quot;  height = &quot; + view.getHeight());</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">// 将view添加到window中</div><div class="line">viewGroup.addView(view);</div></pre></td></tr></table></figure>
+<p>Log：<br><img src="http://upload-images.jianshu.io/upload_images/4307880-1a6706a82e0422f7?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="log"></p>
+<p>打印出来的日志说明：</p>
+<ol>
+<li>使用handler#post的runnable最先执行，此时View还未layout，无法获取view的宽高。</li>
+<li>接着view的onLayout方法执行，表示view完成了位置的布置，此时可以获取宽高。</li>
+<li>view#post的runnable最后执行，也就是说view已经layout完成才执行，此时能够获取View的宽高。</li>
+</ol>
+<p>这里提一下，<strong>下一次performTraversals到来的时候，View可能attach到了window上，也可能未attach到window上</strong>，也就是代码最后不执行addView动作，使用view#post的runnable仍然无法获取View的宽高，修改如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">// viewGroup.addView(view);</div></pre></td></tr></table></figure></p>
+<p>Log：<br><img src="http://upload-images.jianshu.io/upload_images/4307880-f0f0d8d49dca3726?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Log2"></p>
+<p>我们经常碰到一个问题，就是new一个View之后，通过addView添加到视图树或者是在Activity的onCreate方法里调用setContentView方法。紧接着，我们想获取View的宽高，但是因为view的measure和layout都还未执行，所以是获取不到宽高的。<br><strong>view#post的一个作用是，在下一个performTraversals到来的时候，也就是view完成layout之后的第一时间获取宽高</strong>。</p>
+<h3 id="View-post方法导致的内存泄漏"><a href="#View-post方法导致的内存泄漏" class="headerlink" title="View#post方法导致的内存泄漏"></a>View#post方法导致的内存泄漏</h3><p>分析泄漏之前需要查看ViewRootImpl里的RunQueue成员变量定义以及创建过程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// 用ThreadLocal对象来保存ViewRootImpl的RunQueue实例</div><div class="line">static final ThreadLocal&lt;RunQueue&gt; sRunQueues = new ThreadLocal&lt;RunQueue&gt;();</div><div class="line"></div><div class="line">static RunQueue getRunQueue() &#123;</div><div class="line">    RunQueue rq = sRunQueues.get();</div><div class="line">    if (rq != null) &#123;</div><div class="line">        return rq;</div><div class="line">    &#125;</div><div class="line">    // 如果当前线程没有创建RunQueue实例，创建并保存在sRunQueues中</div><div class="line">    rq = new RunQueue();</div><div class="line">    sRunQueues.set(rq);</div><div class="line">    return rq;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>首先这里的ThreadLocal内部持有的实例是线程单利的，也就是不同的线程调用sRunQueues.get()得到的不是同一个对象。</p>
+<p>ViewRootImpl使用ThreadLocal来保存RunQueue实例，一般来说，ViewRootImpl#getRunQueue都是在UI线程使用，所以RunQueue实例只有一个。UI线程的对象引用关系：<br><img src="http://upload-images.jianshu.io/upload_images/4307880-414f51f54ca1a134?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="UIThread"><br>UIThread是应用程序启动的时候，新建的一个线程，生命周期与应用程序一致，也就是说UI线程对应的RunQueue实例是无法被回收的，但是无所谓，因为每次ViewRootImpl#performTraversals方法被调用时都会把RunQueue里的所有Runnable对象执行并清除。</p>
+<p>接着，如果是异步线程调用了View#post方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">new Thread(new Runnable() &#123;</div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        new View(getApplicationContext()).post(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;).start();</div></pre></td></tr></table></figure></p>
+<p>这里的的对象引用关系：<br><img src="http://upload-images.jianshu.io/upload_images/4307880-4beb3d41c1eee3c3?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="MyThread"><br>这里定义的Thread只是一个临时对象，并没有被GC-Root持有，是可以被垃圾回收器回收的，那么我们post出去的Runnable只是不会被执行而已，最后还是会被回收，并不会造成内存泄漏。</p>
+<p><strong>但是如果，这个Thread是一个静态变量的话，那么我们使用异步线程post出去的Runnable也就泄漏了，如果这些runnable又引用了View对象或者是Activity对象，就会造成更大范围的泄漏。</strong></p>
+<p>虽然，Thread被定义成静态变量的情况很少出现。但是线程池被定义成静态变量却常常出现，例如我们应用程序中，经常会定义一些静态线程池对象用来实现线程的复用，比如下面的这个线程池管理类GlobalThreadPool：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">public class GlobalThreadPool &#123;</div><div class="line"></div><div class="line">    private static final int SIZE = 3;</div><div class="line">    private static ScheduledExecutorService mPool;</div><div class="line"></div><div class="line">    public static ScheduledExecutorService getGlobalThreadPoolInstance() &#123;</div><div class="line">        if (mPool == null) &#123;</div><div class="line">            synchronized (GlobalThreadPool.class) &#123;</div><div class="line">                if (mPool == null) &#123;</div><div class="line">                    mPool = Executors.newScheduledThreadPool(SIZE);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return mPool;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * run a thead ,== new thread</div><div class="line">     */</div><div class="line">    public static void startRunInThread(Runnable doSthRunnable) &#123;</div><div class="line">        getGlobalThreadPoolInstance().execute(doSthRunnable);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>接着再把异步处理调用View#post的代码改改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">GlobalThreadPool.startRunInThread(new Runnable() &#123;</div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        new View(MainActivity.this).post(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>这样的话，对象引用关系就变成了：<br><img src="http://upload-images.jianshu.io/upload_images/4307880-e9cd2e91ee579fd2?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="ThreadPool"></p>
+<p>导出的heap文件hprof查看对象引用关系：<br><img src="http://upload-images.jianshu.io/upload_images/4307880-f56ca49e7a1012f1?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="hprof"></p>
+<p>最后，回到文章开头简述中说的，项目中使用异步线程解析布局文件，当解析的布局文件的时候，如果布局文件中包含TextView，这时候，android系统4.4-5.2的机器，就会出现内存泄漏，具体为什么往下看。</p>
+<ol>
+<li>TextView的构造方法调用用了setText方法。</li>
+<li>setText方法又调用了notifyViewAccessibilityStateChangedIfNeeded方法。</li>
+<li>notifyViewAccessibilityStateChangedIfNeeded方法又创建了一个SendViewStateChangedAccessibilityEvent对象，紧接着又调用了SendViewStateChangedAccessibilityEvent对象的runOrPost方法。</li>
+<li>runOrPost方法最终又调用了View的post方法。</li>
+</ol>
+<p>上面这一大串流程，导致的结果就是异步线程调用了View的post方法，如果这里的线程是核心线程，也就是一直会存在于线程池中的线程，并且线程池又是静态的，就导致使用异步线程创建多个TextView相当于是往异步线程的RunQueue中加入多个Runnable，而Runable又引用了View，导致View的泄漏。</p>
+<p><strong>泄漏的对象引用关系和上面主动调用View的post方法类似。</strong></p>
+<p>至于为什么4.4-5.2的机器才会泄漏，是因为4.4-5.2的系统，View中notifyViewAccessibilityStateChangedIfNeeded方法并没有判断View是否attach到了window，直到google发布的android_6.0系统才修复该问题，该问题可以说是google的问题，因为google官方在Support_v4包中就提供了异步线程加载布局文件的框架，具体参阅：android.support.v4.view.AsyncLayoutInflater<br><img src="http://upload-images.jianshu.io/upload_images/4307880-d1988a7f52da5ef3?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="官方文档"><br>传送门：<a href="https://developer.android.com/reference/android/support/v4/view/AsyncLayoutInflater.html" target="_blank" rel="external">https://developer.android.com/reference/android/support/v4/view/AsyncLayoutInflater.html</a></p>
+<p>##总结：</p>
+<ol>
+<li>当View已经attach到window，不管什么线程， 调用View#post  和  调用Handler#post效果一致</li>
+<li>当View尚未attach到window，主线程调用View#post发送的runnable将在下一次performTraversals到来时执行，而非主线程调用View#post发送的runnable将无法被执行。</li>
+<li>可以通过在主线程调用View#post发送runnable来获取下一次performTraversals时视图树中View的布局信息，如宽高。</li>
+<li>如果调用View#post方法的线程对象被GC-Root引用，则发送的runnable将会造成内存泄漏。</li>
+</ol>
+<hr>
+<p>本文结束，感谢欣赏。</p>
+<p><strong>欢迎转载，请注明本文的链接地址：</strong></p>
+<p><a href="http://wwangc.me/post/android-view-post-ml.html" target="_blank" rel="external">http://wwangc.me/post/android-view-post-ml.html</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/View/" rel="tag"># View</a>
+          
+            <a href="/tags/Handler/" rel="tag"># Handler</a>
+          
+            <a href="/tags/MemoryLeak/" rel="tag"># MemoryLeak</a>
+          
+            <a href="/tags/AsyncLoadView/" rel="tag"># AsyncLoadView</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/post/undefined/" rel="next" title="Android图形显示系统（一）">
+                <i class="fa fa-chevron-left"></i> Android图形显示系统（一）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/post/android-layout-inflate.html/" rel="prev" title="Android-LayoutInflater布局文件解析过程分析">
+                Android-LayoutInflater布局文件解析过程分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="良秋" />
+          <p class="site-author-name" itemprop="name">良秋</p>
+           
+              <p class="site-description motion-element" itemprop="description">热衷Android技术，Android图形显示系统与性能优化。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#post方法分析"><span class="nav-number">1.</span> <span class="nav-text">post方法分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#View-post与Handler-post的区别"><span class="nav-number">2.</span> <span class="nav-text">View#post与Handler#post的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#View-post方法导致的内存泄漏"><span class="nav-number">3.</span> <span class="nav-text">View#post方法导致的内存泄漏</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">良秋</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
