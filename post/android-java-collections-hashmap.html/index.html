@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="HTTPS,网络," />
+  <meta name="keywords" content="HashMap," />
 
 
 
@@ -93,24 +93,20 @@
 
 
 
-<meta name="description" content="简述HTTPS就是在HTTP的基础上做了一个加密的操作，让客户端与服务端的数据传输更加的安全。所以在讲解HTTPS之前，需要对加密方式进行了解。 加密方式HTTPS使用到了非对称加密和对称加密，在进行握手操作时，需要用到非对称加密，握手成功之后的交互采用对称加密。 对称加密对称加密只有一个密钥。发送方使用该密钥进行加密，接收方使用该密钥进行解密。过程大致如下：  A给B发送数据，使用密钥加密并发送">
-<meta name="keywords" content="HTTPS,网络">
+<meta name="description" content="一个HashMap需要注意到东西因为需要把不同的key对应散列到数组的不同位置，所以需要有一个算法来减少碰撞（放到数组的同一个位置，叫碰撞） 方法1：重写key的hashCode尽量保证不同的对象生成不同的值，所以建议重写key类的hashCode方法 重写技巧来至一位大神博客：1.把某个非 0 的常数值，比如 17, 或者是 31 (推荐31, 具体原因后面会讲到 )，保存在一个名为result">
+<meta name="keywords" content="HashMap">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HTTPS学习记录">
-<meta property="og:url" content="http://yoursite.com/post/network-https.html/index.html">
+<meta property="og:title" content="HashMap总结（不断完善）">
+<meta property="og:url" content="http://yoursite.com/post/android-java-collections-hashmap.html/index.html">
 <meta property="og:site_name" content="良秋的博客">
-<meta property="og:description" content="简述HTTPS就是在HTTP的基础上做了一个加密的操作，让客户端与服务端的数据传输更加的安全。所以在讲解HTTPS之前，需要对加密方式进行了解。 加密方式HTTPS使用到了非对称加密和对称加密，在进行握手操作时，需要用到非对称加密，握手成功之后的交互采用对称加密。 对称加密对称加密只有一个密钥。发送方使用该密钥进行加密，接收方使用该密钥进行解密。过程大致如下：  A给B发送数据，使用密钥加密并发送">
-<meta property="og:image" content="http://yoursite.com/uploads/network-https/1.jpg">
-<meta property="og:image" content="http://yoursite.com/uploads/network-https/2.jpg">
-<meta property="og:image" content="http://yoursite.com/uploads/network-https/3.jpg">
-<meta property="og:image" content="http://yoursite.com/uploads/network-https/4.jpg">
-<meta property="og:image" content="http://yoursite.com/uploads/network-https/5.png">
-<meta property="og:image" content="http://yoursite.com/uploads/network-https/6.jpg">
-<meta property="og:updated_time" content="2017-07-05T09:39:47.000Z">
+<meta property="og:description" content="一个HashMap需要注意到东西因为需要把不同的key对应散列到数组的不同位置，所以需要有一个算法来减少碰撞（放到数组的同一个位置，叫碰撞） 方法1：重写key的hashCode尽量保证不同的对象生成不同的值，所以建议重写key类的hashCode方法 重写技巧来至一位大神博客：1.把某个非 0 的常数值，比如 17, 或者是 31 (推荐31, 具体原因后面会讲到 )，保存在一个名为result">
+<meta property="og:image" content="http://yoursite.com/uploads/java-collections-hashmap/1.jpeg">
+<meta property="og:image" content="http://yoursite.com/uploads/java-collections-hashmap/2.jpeg">
+<meta property="og:updated_time" content="2017-07-11T06:51:22.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HTTPS学习记录">
-<meta name="twitter:description" content="简述HTTPS就是在HTTP的基础上做了一个加密的操作，让客户端与服务端的数据传输更加的安全。所以在讲解HTTPS之前，需要对加密方式进行了解。 加密方式HTTPS使用到了非对称加密和对称加密，在进行握手操作时，需要用到非对称加密，握手成功之后的交互采用对称加密。 对称加密对称加密只有一个密钥。发送方使用该密钥进行加密，接收方使用该密钥进行解密。过程大致如下：  A给B发送数据，使用密钥加密并发送">
-<meta name="twitter:image" content="http://yoursite.com/uploads/network-https/1.jpg">
+<meta name="twitter:title" content="HashMap总结（不断完善）">
+<meta name="twitter:description" content="一个HashMap需要注意到东西因为需要把不同的key对应散列到数组的不同位置，所以需要有一个算法来减少碰撞（放到数组的同一个位置，叫碰撞） 方法1：重写key的hashCode尽量保证不同的对象生成不同的值，所以建议重写key类的hashCode方法 重写技巧来至一位大神博客：1.把某个非 0 的常数值，比如 17, 或者是 31 (推荐31, 具体原因后面会讲到 )，保存在一个名为result">
+<meta name="twitter:image" content="http://yoursite.com/uploads/java-collections-hashmap/1.jpeg">
 
 
 
@@ -138,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/post/network-https.html/"/>
+  <link rel="canonical" href="http://yoursite.com/post/android-java-collections-hashmap.html/"/>
 
 
 
 
 
-  <title>HTTPS学习记录 | 良秋的博客</title>
+  <title>HashMap总结（不断完善） | 良秋的博客</title>
   
 
 
@@ -273,7 +269,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/post/network-https.html/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/post/android-java-collections-hashmap.html/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="良秋">
@@ -290,7 +286,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">HTTPS学习记录</h1>
+          <h1 class="post-title" itemprop="name headline">HashMap总结（不断完善）</h1>
         
 
         <div class="post-meta">
@@ -302,8 +298,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-05T09:40:17+08:00">
-                2017-07-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-11T11:04:57+08:00">
+                2017-07-11
               </time>
             
 
@@ -325,8 +321,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/网络/" itemprop="url" rel="index">
-                    <span itemprop="name">网络</span>
+                  <a href="/categories/Java集合框架/" itemprop="url" rel="index">
+                    <span itemprop="name">Java集合框架</span>
                   </a>
                 </span>
 
@@ -336,8 +332,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/网络/HTTPS/" itemprop="url" rel="index">
-                    <span itemprop="name">HTTPS</span>
+                  <a href="/categories/Java集合框架/HashMap/" itemprop="url" rel="index">
+                    <span itemprop="name">HashMap</span>
                   </a>
                 </span>
 
@@ -375,58 +371,34 @@
       
 
       
-        <h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p>HTTPS就是在HTTP的基础上做了一个加密的操作，让客户端与服务端的数据传输更加的安全。所以在讲解HTTPS之前，需要对加密方式进行了解。</p>
-<h2 id="加密方式"><a href="#加密方式" class="headerlink" title="加密方式"></a>加密方式</h2><p>HTTPS使用到了非对称加密和对称加密，在进行握手操作时，需要用到非对称加密，握手成功之后的交互采用对称加密。</p>
-<h3 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h3><p>对称加密只有一个密钥。发送方使用该密钥进行加密，接收方使用该密钥进行解密。<br>过程大致如下：</p>
-<ol>
-<li>A给B发送数据，使用密钥加密并发送。</li>
-<li>B收到数据后，使用密钥进行解密。</li>
-<li>接着B再向A发送消息，还是使用密钥进行加密。</li>
-<li>A收到数据后，使用密钥进行解密。</li>
-</ol>
-<p>上述过程有个问题，A和B如何都知道的密钥。也就是说密钥应该是A或者B定义好的，然后发送给了另一方，另一方才知道了密钥。<br>正常来说，一个服务端对应成千上万个客户端，所以应该是服务端定义好密钥发送给各个客户端。问题就来了，第三方可以在这个过程中拦截密钥，这样就不能保证安全性了。</p>
-<h3 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h3><p>非对称加密方式，一般有一对公钥和私钥。可以理解为一个锁(公钥)和一把钥匙(私钥)，通过公钥(锁)加密后的数据，只能通过私钥(钥匙)进行解密。</p>
-<p>信息发送方通过公钥(锁)对数据进行加密，并发送给接收方。接收方再通过私钥(钥匙)进行解密，拿到发送过来的数据。</p>
-<p>A和B进行通讯：</p>
-<ol>
-<li>A和B都需要生成一个公钥和一个私钥。</li>
-<li>A把自己的公钥给B，B把自己的公钥给A。</li>
-<li>A使用B的公钥加密消息发送给B，B用自己的私钥解密。</li>
-<li>B使用A的公钥向A发送消息，A使用自己的私钥解密。</li>
-</ol>
-<p>可以发现，在网络上传输的是公钥，而解密又是用的私钥，所以第三方即使拦截了消息，拿到了公钥，因为没有私钥也是无法解密的（当然，还是有办法从客户端那里骗来密钥，后面讲）。</p>
-<p>在上面的交互过程中，即使客户端往服务端发送的数据被三方拦截，因为没有私钥，也是无法对数据进行解密的。</p>
-<h3 id="两种加密方式的对比"><a href="#两种加密方式的对比" class="headerlink" title="两种加密方式的对比"></a>两种加密方式的对比</h3><ol>
-<li>对称加密方式采用相同的密钥，所以速度快，但由于私钥需要通过网络传递，所以安全性不高。</li>
-<li>非对称加密算法性能是非常低的，原因在于寻找大素数、大数计算、数据分割需要耗费很多的CPU周期，但是由于采用公钥和私钥两个密钥，所以安全性高。</li>
-<li>为了既提高安全性，又加快传输速度，可以将两个加密方式进行结合，采用对称加密来传输非对称加密的密钥。这样能够保证密钥的安全性，如此一来，双方只需要在第一次交流的时候采用非对称方式，以后的交流都可以可以使用对称加密</li>
-</ol>
-<h2 id="HTTPS使用的加密方式"><a href="#HTTPS使用的加密方式" class="headerlink" title="HTTPS使用的加密方式"></a>HTTPS使用的加密方式</h2><p>HTTPS综合了两种加密方式，采用非对称加密方式传输密钥，之后的数据传输使用密钥进行。</p>
-<h3 id="握手阶段"><a href="#握手阶段" class="headerlink" title="握手阶段"></a>握手阶段</h3><p><strong>先简单的用下面的四步来描述：</strong></p>
-<ol>
-<li>客户端向服务器发送请求。</li>
-<li>服务端将公钥发送给客户端。</li>
-<li>客户端生成一个密钥，并使用服务端发来的公钥进行加密，接着把加密后的数据发给服务端。</li>
-<li>服务端通过私钥进行解密，拿到客户端发来的密钥。</li>
-</ol>
-<p>大致过程如下：<br><img src="/uploads/network-https/1.jpg" alt="HTTPS握手过程1"></p>
-<p>上面会有一个问题，如果在第2步，三方拦截了服务端发送给客户端的公钥，然后制作一个假的公钥给客户端，接着再拦截客户端发送出来的加密后的密钥消息。三方再用自己的私钥来解密，就能拿到密钥了，大致过程如下：<br><img src="/uploads/network-https/2.jpg" alt="HTTPS握手过程2-拦截"></p>
-<p>为了解决此问题，引入了数字证书的概念。服务器首先生成公私钥，将公钥提供给相关机构（CA），CA将公钥放入数字证书并将数字证书颁布给服务器，此时服务器就不是简单的把公钥给客户端，而是给客户端一个数字证书，数字证书中加入了一些数字签名的机制，保证了数字证书一定是服务器给客户端的。中间人发送的伪造证书，不能够获得CA的认证，此时，客户端和服务器就知道通信被劫持了。加入了CA数字签名认证的SSL会话过程如下所示：<br><img src="/uploads/network-https/3.jpg" alt="HTTPS握手过程2-拦截"></p>
-<p>所以综合以上三点：非对称加密算法（<strong>公钥和私钥</strong>）交换对称密钥+数字证书验证身份（<strong>验证公钥是否是伪造的</strong>）+利用<strong>对称密钥</strong>加解密后续传输的数据=<strong>安全</strong><br><img src="/uploads/network-https/4.jpg" alt="HTTPS握手过程2-拦截"></p>
-<p>具体是如何进行加密，解密，验证的，且看下图：<br><img src="/uploads/network-https/5.png" alt="HTTPS握手过程2-拦截"></p>
-<p>以及：<br><img src="/uploads/network-https/6.jpg" alt="HTTPS握手过程2-拦截"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
-<li>HTTPS相对HTTP来说，多了握手（传送密钥）的过程，以及对数据的加密。</li>
-<li>HTTPS的加密，使用了非对称加密，以及对称加密两种。握手过程两种都用上了，之后的传送都是用对称加密。</li>
-<li>HTTPS实现加密的关键点之一是保证对称加密的密钥不被第三方拦截。</li>
-<li>证书是一个三方机构颁发的东西，用来给客户端做认证的。</li>
-<li>因为HTTPS的请求过程需要进行握手，非对称（握手过程），对称（握手以及后续数据发送），一方面，加密会对CPU产生负担，另一方面，握手过程需要耗费请求的时长。</li>
-</ol>
+        <h2 id="一个HashMap需要注意到东西"><a href="#一个HashMap需要注意到东西" class="headerlink" title="一个HashMap需要注意到东西"></a>一个HashMap需要注意到东西</h2><p>因为需要把不同的key对应散列到数组的不同位置，所以需要有一个算法来减少碰撞（放到数组的同一个位置，叫碰撞）</p>
+<h3 id="方法1：重写key的hashCode"><a href="#方法1：重写key的hashCode" class="headerlink" title="方法1：重写key的hashCode"></a>方法1：重写key的hashCode</h3><p>尽量保证不同的对象生成不同的值，所以建议重写key类的hashCode方法</p>
+<p>重写技巧来至一位<a href="http://blog.csdn.net/congspark/article/details/71758815#hashcode-最佳实现方式" target="_blank" rel="external">大神博客：</a><br>1.把某个非 0 的常数值，比如 17, 或者是 31 (推荐31, 具体原因后面会讲到 )，保存在一个名为result的int类型的变量中。</p>
+<p>2.对于对象中的每个域 f ，做如下操作, 为该域计算 int 类型的哈希值 c：： </p>
+<ul>
+<li>如果该域是 boolean 类型，则计算(f ? 1 : 0) </li>
+<li>如果该域是 byte、char、short 或者 int 类型，则计算(int)f </li>
+<li>如果该域是long类型，则计算 (int)(f ^ (f&gt;&gt;&gt;32)) </li>
+<li>如果该域是float类型，则计算Float.floatToIntBits(f) </li>
+<li>如果该域是double类型，则计算Double.doubleToLongBits(f)，然后重复第三个步骤。 </li>
+<li>如果该域是一个对象引用，并且该类的 equals 方法通过递归调用 equals 方法来比较这个域，同样为这个域递归的调用 hashCode，如果这个域为null，则返回0。 </li>
+<li>如果该域是数组，则要把每一个元素当作单独的域来处理，递归的运用上述规则，如果数组域中的每个元素都很重要，那么可以使用 Arrays.hashCode 方法。</li>
+</ul>
+<p>把上面每一次计算得到的hash值c合并到result中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// result 初始化为一个非零值. </div><div class="line">result = 31 * result + c</div></pre></td></tr></table></figure>
+<h3 id="hashCode转化成hash的算法"><a href="#hashCode转化成hash的算法" class="headerlink" title="hashCode转化成hash的算法"></a>hashCode转化成hash的算法</h3><p>为什么要进行hash，是为了进一步减少碰撞率。按照jdk 1.8的规范，把高16位和低16位取异或，也就是混合高16位和低16位。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// Java 8中的散列值优化函数</div><div class="line">static final int hash(Object key) &#123;</div><div class="line">	int h;</div><div class="line">	return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);</div><div class="line">	// key.hashCode()为哈希算法，为key对象hashCode方法放回的值</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>看看下面这这个图：<br><img src="/uploads/java-collections-hashmap/1.jpeg" alt="抖动函数"></p>
+<h3 id="将hash值映射到数组下标中"><a href="#将hash值映射到数组下标中" class="headerlink" title="将hash值映射到数组下标中"></a>将hash值映射到数组下标中</h3><p>数组长度length = 2^n，目的是(length - 1)得到的二进制是一个低位掩码。</p>
+<p>如<br>16 = 2^4；<br>15 = 16 - 1；<br>15 = 00001111；<br>hash值与15做与操作，得到的就是hash值除以16的余数，也就是数组下标。</p>
+<p>如下图：<br><img src="/uploads/java-collections-hashmap/2.jpeg" alt="得到数组小标"></p>
+<h3 id="重写Key和Value的equals方法"><a href="#重写Key和Value的equals方法" class="headerlink" title="重写Key和Value的equals方法"></a>重写Key和Value的equals方法</h3><p>重现key和value的equals方法，目的是为了定义查找key或者value对应的键值对的时候，判等的规则。</p>
 <hr>
+<h1 id="后期继续完善"><a href="#后期继续完善" class="headerlink" title="后期继续完善"></a>后期继续完善</h1><hr>
 <p>本文结束，感谢欣赏。</p>
+<p>参考：<br><a href="http://blog.csdn.net/congspark/article/details/71758815" target="_blank" rel="external">深入理解HashMap(1)</a><br><a href="https://www.zhihu.com/question/20733617" target="_blank" rel="external">JDK 源码中 HashMap 的 hash 方法原理是什么？</a></p>
 <p><strong>欢迎转载，请注明本文的链接地址：</strong></p>
-<p><a href="http://wwangc.me/post/network-https.html" target="_blank" rel="external">http://wwangc.me/post/network-https.html</a></p>
-<p><strong>参考：</strong><br><a href="http://wetest.qq.com/lab/view/110.html" target="_blank" rel="external">http://wetest.qq.com/lab/view/110.html</a><br><a href="http://blog.csdn.net/clh604/article/details/22179907" target="_blank" rel="external">http://blog.csdn.net/clh604/article/details/22179907</a></p>
+<p><a href="http://wwangc.me/post/android-java-collections-hashmap.html" target="_blank" rel="external">http://wwangc.me/post/android-java-collections-hashmap.html</a></p>
 
       
     </div>
@@ -456,9 +428,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/HTTPS/" rel="tag"># HTTPS</a>
-          
-            <a href="/tags/网络/" rel="tag"># 网络</a>
+            <a href="/tags/HashMap/" rel="tag"># HashMap</a>
           
         </div>
       
@@ -471,8 +441,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/post/android-layout-inflate.html/" rel="next" title="Android-LayoutInflater布局文件解析过程分析">
-                <i class="fa fa-chevron-left"></i> Android-LayoutInflater布局文件解析过程分析
+              <a href="/post/android-plugins-dev.html/" rel="next" title="Android插件化开发总结">
+                <i class="fa fa-chevron-left"></i> Android插件化开发总结
               </a>
             
           </div>
@@ -480,10 +450,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/post/android-plugins-dev.html/" rel="prev" title="Android插件化开发总结">
-                Android插件化开发总结 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -625,7 +591,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简述"><span class="nav-number">1.</span> <span class="nav-text">简述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加密方式"><span class="nav-number">2.</span> <span class="nav-text">加密方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对称加密"><span class="nav-number">2.1.</span> <span class="nav-text">对称加密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非对称加密"><span class="nav-number">2.2.</span> <span class="nav-text">非对称加密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#两种加密方式的对比"><span class="nav-number">2.3.</span> <span class="nav-text">两种加密方式的对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS使用的加密方式"><span class="nav-number">3.</span> <span class="nav-text">HTTPS使用的加密方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#握手阶段"><span class="nav-number">3.1.</span> <span class="nav-text">握手阶段</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一个HashMap需要注意到东西"><span class="nav-number">1.</span> <span class="nav-text">一个HashMap需要注意到东西</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法1：重写key的hashCode"><span class="nav-number">1.1.</span> <span class="nav-text">方法1：重写key的hashCode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hashCode转化成hash的算法"><span class="nav-number">1.2.</span> <span class="nav-text">hashCode转化成hash的算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将hash值映射到数组下标中"><span class="nav-number">1.3.</span> <span class="nav-text">将hash值映射到数组下标中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重写Key和Value的equals方法"><span class="nav-number">1.4.</span> <span class="nav-text">重写Key和Value的equals方法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后期继续完善"><span class="nav-number"></span> <span class="nav-text">后期继续完善</span></a></div>
             
 
           </div>
