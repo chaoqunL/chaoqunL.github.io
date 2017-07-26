@@ -120,7 +120,7 @@
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4307880-fb707697e784b095?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4307880-6b0d0122a88acaed?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4307880-642e680b7b8e0911?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-06-28T09:46:07.000Z">
+<meta property="og:updated_time" content="2017-07-26T02:32:28.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android图形显示系统（一）">
 <meta name="twitter:description" content="简介本文讲解的内容是Android4.1以后的系统机制，将从整体上分析Android图形显示系统的结构，不深入分析每一层内部的代码实现，更多的是使用流程图和结构图来让大家理解Android是如何绘制、合成图形并显示到屏幕上。 本文将从三个层次进行讲解，大致如下图：可以理解为上层生产，下层消费模型。 其中每一层之间的数据传递是使用Buffer（图形缓冲区）作为载体：这里的缓冲区，大家可以理解为带有宽">
@@ -413,7 +413,7 @@
 <p>我们会发现SufaceFlinger通过屏幕后缓冲区与屏幕建立联系。同时通过Surface与上层建立联系。从而起到一个承上启下的作用，是Android图形系统结构中的关键组成部分。</p>
 <p>为了继续往上层讲，我们需要了解什么是Surface：</p>
 <ul>
-<li>对应上层的一个Window（对话框、Activity、状态栏）</li>
+<li>对应上层的一个Window（对话框、Activity、状态栏，或者是SurfaceView）</li>
 <li>作为上层图形绘制的<strong>画板</strong></li>
 <li>Canvas是<strong>画笔</strong>，上层通过调用Canvas的API向Surface上绘制图形</li>
 <li>Surface内部存在多个缓冲区，形成一个BufferQueue</li>
