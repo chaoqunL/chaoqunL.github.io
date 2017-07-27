@@ -511,9 +511,15 @@ Android Launcher应用里的小插件（widget），三方应用是如何将自�
       
         
           
-          一个HashMap需要注意到东西因为需要把不同的key对应散列到数组的不同位置，所以需要有一个算法来减少碰撞（放到数组的同一个位置，叫碰撞）
-方法1：重写key的hashCode尽量保证不同的对象生成不同的值，所以建议重写key类的hashCode方法
-重写技巧来至一位大神博客：1.把某个非 0 的
+          简介（目录）
+Hash算法的实现（防止碰撞）
+发生碰撞后的处理
+get与remove过程
+线程安全
+与Android的SparseArray还有ArrayMap区别
+
+Hash算法的实现（防止碰撞）为了减少碰撞，需要从以下几个方面来做。
+重写key的hashCode尽量保证不同的对象生成不同的has
           ...
           <!--noindex-->
           <div class="post-button text-center">

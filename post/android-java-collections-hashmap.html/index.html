@@ -93,19 +93,20 @@
 
 
 
-<meta name="description" content="一个HashMap需要注意到东西因为需要把不同的key对应散列到数组的不同位置，所以需要有一个算法来减少碰撞（放到数组的同一个位置，叫碰撞） 方法1：重写key的hashCode尽量保证不同的对象生成不同的值，所以建议重写key类的hashCode方法 重写技巧来至一位大神博客：1.把某个非 0 的常数值，比如 17, 或者是 31 (推荐31, 具体原因后面会讲到 )，保存在一个名为result">
+<meta name="description" content="简介（目录） Hash算法的实现（防止碰撞） 发生碰撞后的处理 get与remove过程 线程安全 与Android的SparseArray还有ArrayMap区别  Hash算法的实现（防止碰撞）为了减少碰撞，需要从以下几个方面来做。 重写key的hashCode尽量保证不同的对象生成不同的hash值，所以建议重写key类的hashCode方法，因为hash值的来源就是调用对象的hashCode">
 <meta name="keywords" content="HashMap">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HashMap总结（不断完善）">
 <meta property="og:url" content="http://yoursite.com/post/android-java-collections-hashmap.html/index.html">
 <meta property="og:site_name" content="良秋的博客">
-<meta property="og:description" content="一个HashMap需要注意到东西因为需要把不同的key对应散列到数组的不同位置，所以需要有一个算法来减少碰撞（放到数组的同一个位置，叫碰撞） 方法1：重写key的hashCode尽量保证不同的对象生成不同的值，所以建议重写key类的hashCode方法 重写技巧来至一位大神博客：1.把某个非 0 的常数值，比如 17, 或者是 31 (推荐31, 具体原因后面会讲到 )，保存在一个名为result">
+<meta property="og:description" content="简介（目录） Hash算法的实现（防止碰撞） 发生碰撞后的处理 get与remove过程 线程安全 与Android的SparseArray还有ArrayMap区别  Hash算法的实现（防止碰撞）为了减少碰撞，需要从以下几个方面来做。 重写key的hashCode尽量保证不同的对象生成不同的hash值，所以建议重写key类的hashCode方法，因为hash值的来源就是调用对象的hashCode">
 <meta property="og:image" content="http://yoursite.com/uploads/java-collections-hashmap/1.jpeg">
 <meta property="og:image" content="http://yoursite.com/uploads/java-collections-hashmap/2.jpeg">
-<meta property="og:updated_time" content="2017-07-11T06:51:22.000Z">
+<meta property="og:image" content="http://yoursite.com/uploads/java-collections-hashmap/3.jpeg">
+<meta property="og:updated_time" content="2017-07-27T02:56:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HashMap总结（不断完善）">
-<meta name="twitter:description" content="一个HashMap需要注意到东西因为需要把不同的key对应散列到数组的不同位置，所以需要有一个算法来减少碰撞（放到数组的同一个位置，叫碰撞） 方法1：重写key的hashCode尽量保证不同的对象生成不同的值，所以建议重写key类的hashCode方法 重写技巧来至一位大神博客：1.把某个非 0 的常数值，比如 17, 或者是 31 (推荐31, 具体原因后面会讲到 )，保存在一个名为result">
+<meta name="twitter:description" content="简介（目录） Hash算法的实现（防止碰撞） 发生碰撞后的处理 get与remove过程 线程安全 与Android的SparseArray还有ArrayMap区别  Hash算法的实现（防止碰撞）为了减少碰撞，需要从以下几个方面来做。 重写key的hashCode尽量保证不同的对象生成不同的hash值，所以建议重写key类的hashCode方法，因为hash值的来源就是调用对象的hashCode">
 <meta name="twitter:image" content="http://yoursite.com/uploads/java-collections-hashmap/1.jpeg">
 
 
@@ -371,8 +372,15 @@
       
 
       
-        <h2 id="一个HashMap需要注意到东西"><a href="#一个HashMap需要注意到东西" class="headerlink" title="一个HashMap需要注意到东西"></a>一个HashMap需要注意到东西</h2><p>因为需要把不同的key对应散列到数组的不同位置，所以需要有一个算法来减少碰撞（放到数组的同一个位置，叫碰撞）</p>
-<h3 id="方法1：重写key的hashCode"><a href="#方法1：重写key的hashCode" class="headerlink" title="方法1：重写key的hashCode"></a>方法1：重写key的hashCode</h3><p>尽量保证不同的对象生成不同的值，所以建议重写key类的hashCode方法</p>
+        <h1 id="简介（目录）"><a href="#简介（目录）" class="headerlink" title="简介（目录）"></a>简介（目录）</h1><ol>
+<li>Hash算法的实现（防止碰撞）</li>
+<li>发生碰撞后的处理</li>
+<li>get与remove过程</li>
+<li>线程安全</li>
+<li>与Android的SparseArray还有ArrayMap区别</li>
+</ol>
+<h2 id="Hash算法的实现（防止碰撞）"><a href="#Hash算法的实现（防止碰撞）" class="headerlink" title="Hash算法的实现（防止碰撞）"></a>Hash算法的实现（防止碰撞）</h2><p>为了减少碰撞，需要从以下几个方面来做。</p>
+<h3 id="重写key的hashCode"><a href="#重写key的hashCode" class="headerlink" title="重写key的hashCode"></a>重写key的hashCode</h3><p>尽量保证不同的对象生成不同的hash值，所以建议重写key类的hashCode方法，因为hash值的来源就是调用对象的hashCode();方法得来的。</p>
 <p>重写技巧来至一位<a href="http://blog.csdn.net/congspark/article/details/71758815#hashcode-最佳实现方式" target="_blank" rel="external">大神博客：</a><br>1.把某个非 0 的常数值，比如 17, 或者是 31 (推荐31, 具体原因后面会讲到 )，保存在一个名为result的int类型的变量中。</p>
 <p>2.对于对象中的每个域 f ，做如下操作, 为该域计算 int 类型的哈希值 c：： </p>
 <ul>
@@ -386,13 +394,40 @@
 </ul>
 <p>把上面每一次计算得到的hash值c合并到result中</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// result 初始化为一个非零值. </div><div class="line">result = 31 * result + c</div></pre></td></tr></table></figure>
-<h3 id="hashCode转化成hash的算法"><a href="#hashCode转化成hash的算法" class="headerlink" title="hashCode转化成hash的算法"></a>hashCode转化成hash的算法</h3><p>为什么要进行hash，是为了进一步减少碰撞率。按照jdk 1.8的规范，把高16位和低16位取异或，也就是混合高16位和低16位。</p>
+<h3 id="2-hashCode值转化成hash的算法"><a href="#2-hashCode值转化成hash的算法" class="headerlink" title="2. hashCode值转化成hash的算法"></a>2. hashCode值转化成hash的算法</h3><p>为什么要进行hash，是为了进一步减少碰撞率。按照jdk 1.8的规范，把高16位和低16位取异或，也就是混合高16位和低16位。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// Java 8中的散列值优化函数</div><div class="line">static final int hash(Object key) &#123;</div><div class="line">	int h;</div><div class="line">	return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);</div><div class="line">	// key.hashCode()为哈希算法，为key对象hashCode方法放回的值</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>看看下面这这个图：<br><img src="/uploads/java-collections-hashmap/1.jpeg" alt="抖动函数"></p>
-<h3 id="将hash值映射到数组下标中"><a href="#将hash值映射到数组下标中" class="headerlink" title="将hash值映射到数组下标中"></a>将hash值映射到数组下标中</h3><p>数组长度length = 2^n，目的是(length - 1)得到的二进制是一个低位掩码。</p>
+<h3 id="将hash值映射到数组下标中的技巧"><a href="#将hash值映射到数组下标中的技巧" class="headerlink" title="将hash值映射到数组下标中的技巧"></a>将hash值映射到数组下标中的技巧</h3><p>数组长度length = 2^n，目的是(length - 1)得到的二进制是一个低位掩码。</p>
 <p>如<br>16 = 2^4；<br>15 = 16 - 1；<br>15 = 00001111；<br>hash值与15做与操作，得到的就是hash值除以16的余数，也就是数组下标。</p>
 <p>如下图：<br><img src="/uploads/java-collections-hashmap/2.jpeg" alt="得到数组小标"></p>
-<h3 id="重写Key和Value的equals方法"><a href="#重写Key和Value的equals方法" class="headerlink" title="重写Key和Value的equals方法"></a>重写Key和Value的equals方法</h3><p>重现key和value的equals方法，目的是为了定义查找key或者value对应的键值对的时候，判等的规则。</p>
+<h3 id="重写Key和Value的equals方法"><a href="#重写Key和Value的equals方法" class="headerlink" title="重写Key和Value的equals方法"></a>重写Key和Value的equals方法</h3><p>一旦发生碰撞，需要对一个连边进行操作，这时候还需要用到Key的equals方法来做比较，所以尽量重写Key的equals方法。</p>
+<h2 id="发生碰撞后的处理"><a href="#发生碰撞后的处理" class="headerlink" title="发生碰撞后的处理"></a>发生碰撞后的处理</h2><p>比如HashMap的put方法。当法相Key对应的数组下标有entry链表的时候，需要遍历链表，遍历过程中，判断计算后的hash值与entry内部存的hash值是否一样，如果一样，再利用Key的equals方法来判等，如果两个都一样，说明是key是同一个，更新entry里的value值。如果遍历完都没找到key相同的entry，那么新生成一个entry，并把它放在表头，next指针指向之前的表头。</p>
+<p>大致过程如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">public V put(K key, V value) &#123;</div><div class="line">    if (key == null) &#123;</div><div class="line">        // 处理null值</div><div class="line">        return putValueForNullKey(value);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 经过hash算法求得hash值</div><div class="line">    int hash = Collections.secondaryHash(key);</div><div class="line">    HashMapEntry&lt;K, V&gt;[] tab = table;</div><div class="line">    int index = hash &amp; (tab.length - 1);</div><div class="line">    for (HashMapEntry&lt;K, V&gt; e = tab[index]; e != null; e = e.next) &#123;</div><div class="line">        // 判断key是否相等，是通过计算过后的hash值，以及equals两个方法进行判断。</div><div class="line">        if (e.hash == hash &amp;&amp; key.equals(e.key)) &#123;</div><div class="line">            preModify(e);</div><div class="line">            V oldValue = e.value;</div><div class="line">            e.value = value;</div><div class="line">            return oldValue;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // No entry for (non-null) key is present; create one</div><div class="line">    modCount++;</div><div class="line">    if (size++ &gt; threshold) &#123;</div><div class="line">        tab = doubleCapacity();</div><div class="line">        index = hash &amp; (tab.length - 1);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 没有找到对应的key，插入到链表表头</div><div class="line">    addNewEntry(key, value, hash, index);</div><div class="line">    return null;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="get与remove过程"><a href="#get与remove过程" class="headerlink" title="get与remove过程"></a>get与remove过程</h3><p>不管是put还是get还是remove过程，都需要先算出hash值，然后找到hash值对应的数组下标。</p>
+<h4 id="get过程"><a href="#get过程" class="headerlink" title="get过程"></a>get过程</h4><p>拿到数组下标后</p>
+<ol>
+<li>如果下标没有内容，则返回空</li>
+<li>有entry，则遍历链表，遍历过程中，判等通过等号，或者是之前说的hash与equals通过，就算同一个key，返回value值<br>大致过程如下：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public V get(Object key) &#123;</div><div class="line">    if (key == null) &#123;</div><div class="line">        // 处理null的key</div><div class="line">        HashMapEntry&lt;K, V&gt; e = entryForNullKey;</div><div class="line">        return e == null ? null : e.value;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 计算hash值</div><div class="line">    int hash = Collections.secondaryHash(key);</div><div class="line">    HashMapEntry&lt;K, V&gt;[] tab = table;</div><div class="line">    for (HashMapEntry&lt;K, V&gt; e = tab[hash &amp; (tab.length - 1)];</div><div class="line">            e != null; e = e.next) &#123;</div><div class="line">        K eKey = e.key;</div><div class="line">        // 先用==号判等，如果不相等，再用hash值和equals判等。</div><div class="line">        if (eKey == key || (e.hash == hash &amp;&amp; key.equals(eKey))) &#123;</div><div class="line">            return e.value;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    // 如果hash值对应的下标没内容，则返回空</div><div class="line">    return null;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="remove过程"><a href="#remove过程" class="headerlink" title="remove过程"></a>remove过程</h4><p>remove过程中，判断key是否一样的时候，没用使用等于号判等，找到了key对应的entry之后，需要做一个链表节点删除的操作。<br>大致过程如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">public V remove(Object key) &#123;</div><div class="line">    if (key == null) &#123;</div><div class="line">        // 移除null对应的entry</div><div class="line">        return removeNullKey();</div><div class="line">    &#125;</div><div class="line">    int hash = Collections.secondaryHash(key);</div><div class="line">    HashMapEntry&lt;K, V&gt;[] tab = table;</div><div class="line">    int index = hash &amp; (tab.length - 1);</div><div class="line">    for (HashMapEntry&lt;K, V&gt; e = tab[index], prev = null;</div><div class="line">            e != null; prev = e, e = e.next) &#123;</div><div class="line">        // 使用hash值和equals判等</div><div class="line">        if (e.hash == hash &amp;&amp; key.equals(e.key)) &#123;</div><div class="line">            // 移除链表的某一个节点</div><div class="line">            if (prev == null) &#123;</div><div class="line">                tab[index] = e.next;</div><div class="line">            &#125; else &#123;</div><div class="line">                prev.next = e.next;</div><div class="line">            &#125;</div><div class="line">            modCount++;</div><div class="line">            size--;</div><div class="line">            postRemove(e);</div><div class="line">            return e.value;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return null;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><p>HashMap是线程不安全的，所以当多个线程同时操作的时候，可能会出现问题。<br>如：一个线程写，一个线程遍历。</p>
+<p>HashMap在每一次put，remove都会修改一个叫modCount的成员变量。所以当一个线程在不断的put或者remove的时候，modCount会不断的改变。</p>
+<p>HashMap的遍历，首先会保存当前的modCount，然后在遍历到每一个entry的时候都判断一遍遍历前的modCount是否和现在的modCount一致。如果不一致，说明在遍历期间有人修改了HashMap里的内容，则报错。</p>
+<p><img src="/uploads/java-collections-hashmap/3.jpeg" alt="ConcurrentModificationException"></p>
+<p>如果是一个线程写，一个其他线程只是get的话，应该是不会有问题的。</p>
+<h3 id="与Android的SparseArray还有ArrayMap区别"><a href="#与Android的SparseArray还有ArrayMap区别" class="headerlink" title="与Android的SparseArray还有ArrayMap区别"></a>与Android的SparseArray还有ArrayMap区别</h3><p>如果你的HashMap的key是Integer类型，使用SparseArray代替。<br>如果你的HashMap的key是Long类型，使用LongSparseArray代替。<br>否则，使用ArrayMap代替。</p>
+<p>SparseArray，LongSparseArray以及ArrayMap都不是通过entry来存放Key和value的。而是通过一个数组存key，另一个数组存value来实现的。<br>每次插入新的key，都会把key数组进行排序。<br>查找过程，是通过key值进行二分查找。<br>所以在map长度太大（1000以上）的时候，不建议再使用这三个map。因为效率会下降。</p>
+<p>这三个集合的作用是节约内存，减少新对象的创建。除此之外SparseArray和LongSparseArray可以减少装箱和拆箱过程，提高效率。</p>
+<h2 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h2><ol>
+<li>HashMap使用数组+单项链表实现</li>
+<li>为了减少数组下标碰撞，需要写一个hash算法来计算hash值</li>
+<li>key值判等，除了get会对key使用“==”来判断，push和remove都只是用过判断hash和equals方法是否相等。</li>
+<li>存在线程安全问题</li>
+<li>在Android中存储的数据量不大的话，可以使用SparseArray还有ArrayMap代替，具体看需求</li>
+</ol>
 <hr>
 <h1 id="后期继续完善"><a href="#后期继续完善" class="headerlink" title="后期继续完善"></a>后期继续完善</h1><hr>
 <p>本文结束，感谢欣赏。</p>
@@ -595,7 +630,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一个HashMap需要注意到东西"><span class="nav-number">1.</span> <span class="nav-text">一个HashMap需要注意到东西</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法1：重写key的hashCode"><span class="nav-number">1.1.</span> <span class="nav-text">方法1：重写key的hashCode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hashCode转化成hash的算法"><span class="nav-number">1.2.</span> <span class="nav-text">hashCode转化成hash的算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将hash值映射到数组下标中"><span class="nav-number">1.3.</span> <span class="nav-text">将hash值映射到数组下标中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重写Key和Value的equals方法"><span class="nav-number">1.4.</span> <span class="nav-text">重写Key和Value的equals方法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后期继续完善"><span class="nav-number"></span> <span class="nav-text">后期继续完善</span></a></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介（目录）"><span class="nav-number">1.</span> <span class="nav-text">简介（目录）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hash算法的实现（防止碰撞）"><span class="nav-number">1.1.</span> <span class="nav-text">Hash算法的实现（防止碰撞）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#重写key的hashCode"><span class="nav-number">1.1.1.</span> <span class="nav-text">重写key的hashCode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-hashCode值转化成hash的算法"><span class="nav-number">1.1.2.</span> <span class="nav-text">2. hashCode值转化成hash的算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将hash值映射到数组下标中的技巧"><span class="nav-number">1.1.3.</span> <span class="nav-text">将hash值映射到数组下标中的技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重写Key和Value的equals方法"><span class="nav-number">1.1.4.</span> <span class="nav-text">重写Key和Value的equals方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发生碰撞后的处理"><span class="nav-number">1.2.</span> <span class="nav-text">发生碰撞后的处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#get与remove过程"><span class="nav-number">1.2.1.</span> <span class="nav-text">get与remove过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#get过程"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">get过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#remove过程"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">remove过程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程安全"><span class="nav-number">1.2.2.</span> <span class="nav-text">线程安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#与Android的SparseArray还有ArrayMap区别"><span class="nav-number">1.2.3.</span> <span class="nav-text">与Android的SparseArray还有ArrayMap区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结："><span class="nav-number">1.3.</span> <span class="nav-text">总结：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后期继续完善"><span class="nav-number">2.</span> <span class="nav-text">后期继续完善</span></a></li></ol></div>
             
 
           </div>
