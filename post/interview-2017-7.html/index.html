@@ -93,17 +93,17 @@
 
 
 
-<meta name="description" content="蚂蚁金服 目前插件化实现的方案都有哪些，有什么不同的地方（说到了DL，DroidPlugin，RePlugin） ClassLoader的双亲委派实现机制 热修复有了解过吗 Android Launcher应用里的小插件（widget），三方应用是如何将自己的插件放在桌面上的，怎么理解这个widget。（因为之前自己做过launcher，所以问了这个问题） LinkedList和ArrayList">
+<meta name="description" content="面试前准备： 面试官让自我介绍的时候说太细了，应该大体介绍一下自己呆的公司以及做的产品，最后说一下自己擅长的地方，把最擅长的往前放，引到面试官问你擅长的地方。 面试官问的问题比较泛的时候，需要问清楚面试官具体想了解的是哪一块知识点。 面试前需要总结自己在公司项目中的突出贡献，需要做到记忆深刻，脱口而出。一般面试官都会问你在项目中做了哪些自己认为比较厉害的点。 面试中如果碰到自己之前未遇到过的开放性">
 <meta name="keywords" content="面试">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2017年中旬面试总结">
 <meta property="og:url" content="http://yoursite.com/post/interview-2017-7.html/index.html">
 <meta property="og:site_name" content="良秋的博客">
-<meta property="og:description" content="蚂蚁金服 目前插件化实现的方案都有哪些，有什么不同的地方（说到了DL，DroidPlugin，RePlugin） ClassLoader的双亲委派实现机制 热修复有了解过吗 Android Launcher应用里的小插件（widget），三方应用是如何将自己的插件放在桌面上的，怎么理解这个widget。（因为之前自己做过launcher，所以问了这个问题） LinkedList和ArrayList">
-<meta property="og:updated_time" content="2017-07-26T09:43:11.000Z">
+<meta property="og:description" content="面试前准备： 面试官让自我介绍的时候说太细了，应该大体介绍一下自己呆的公司以及做的产品，最后说一下自己擅长的地方，把最擅长的往前放，引到面试官问你擅长的地方。 面试官问的问题比较泛的时候，需要问清楚面试官具体想了解的是哪一块知识点。 面试前需要总结自己在公司项目中的突出贡献，需要做到记忆深刻，脱口而出。一般面试官都会问你在项目中做了哪些自己认为比较厉害的点。 面试中如果碰到自己之前未遇到过的开放性">
+<meta property="og:updated_time" content="2017-07-28T15:21:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2017年中旬面试总结">
-<meta name="twitter:description" content="蚂蚁金服 目前插件化实现的方案都有哪些，有什么不同的地方（说到了DL，DroidPlugin，RePlugin） ClassLoader的双亲委派实现机制 热修复有了解过吗 Android Launcher应用里的小插件（widget），三方应用是如何将自己的插件放在桌面上的，怎么理解这个widget。（因为之前自己做过launcher，所以问了这个问题） LinkedList和ArrayList">
+<meta name="twitter:description" content="面试前准备： 面试官让自我介绍的时候说太细了，应该大体介绍一下自己呆的公司以及做的产品，最后说一下自己擅长的地方，把最擅长的往前放，引到面试官问你擅长的地方。 面试官问的问题比较泛的时候，需要问清楚面试官具体想了解的是哪一块知识点。 面试前需要总结自己在公司项目中的突出贡献，需要做到记忆深刻，脱口而出。一般面试官都会问你在项目中做了哪些自己认为比较厉害的点。 面试中如果碰到自己之前未遇到过的开放性">
 
 
 
@@ -357,11 +357,18 @@
       
 
       
-        <h2 id="蚂蚁金服"><a href="#蚂蚁金服" class="headerlink" title="蚂蚁金服"></a>蚂蚁金服</h2><ol>
+        <h2 id="面试前准备："><a href="#面试前准备：" class="headerlink" title="面试前准备："></a>面试前准备：</h2><ol>
+<li>面试官让自我介绍的时候说太细了，应该大体介绍一下自己呆的公司以及做的产品，最后说一下自己擅长的地方，把最擅长的往前放，引到面试官问你擅长的地方。</li>
+<li>面试官问的问题比较泛的时候，需要问清楚面试官具体想了解的是哪一块知识点。</li>
+<li>面试前需要总结自己在公司项目中的突出贡献，需要做到记忆深刻，脱口而出。一般面试官都会问你在项目中做了哪些自己认为比较厉害的点。</li>
+<li>面试中如果碰到自己之前未遇到过的开放性问题，需要你给出解决方案的时候，（比如如何实现一个xxxx功能）尽量给出自己的理解与想法，从多方面去考虑问题的解决方案。</li>
+<li>提前准备好Android的基础知识，Java基础知识，算法。</li>
+</ol>
+<h2 id="蚂蚁金服"><a href="#蚂蚁金服" class="headerlink" title="蚂蚁金服"></a>蚂蚁金服</h2><ol>
 <li>目前插件化实现的方案都有哪些，有什么不同的地方（说到了DL，DroidPlugin，RePlugin）</li>
 <li>ClassLoader的双亲委派实现机制</li>
 <li>热修复有了解过吗</li>
-<li>Android Launcher应用里的小插件（widget），三方应用是如何将自己的插件放在桌面上的，怎么理解这个widget。（因为之前自己做过launcher，所以问了这个问题）</li>
+<li>AppWidget与RemoteView如何实现的</li>
 <li>LinkedList和ArrayList的区别</li>
 <li>LinkedHashMap和HashMap的区别</li>
 <li>StringBuilder和StringBuffer的区别</li>
@@ -372,21 +379,17 @@
 <li>了解系统服务吗（AMS,WMS,zygote等等）</li>
 <li>算法：1! + 2! + 3! + 4! + … + n!</li>
 </ol>
-<h3 id="问题总结："><a href="#问题总结：" class="headerlink" title="问题总结："></a>问题总结：</h3><ol>
-<li>面试官让自我介绍的时候说太细了，应该大体介绍一下自己呆的公司以及做的产品，最后说一下自己擅长的地方，把最擅长的往前放，引到面试官问你擅长的地方。</li>
-<li>面试官问的问题比较泛的时候，试着问面试官具体想知道哪一块的知识，比如问系统服务，问问面试官是不是想知道AMS怎么和APP交互的。</li>
-</ol>
 <h2 id="美团"><a href="#美团" class="headerlink" title="美团"></a>美团</h2><ol>
 <li>说一说插件化的实现原理，热修复，插件和宿主是如何通信的。</li>
 <li>Android中的ClassLoader结构，Android对java的ClassLoader做了哪些修改，google为何要做这些修改。</li>
 <li>动态代理的实现原理，动态代理中动态生成的Class，除了接口方法外，另外实现的三个方法是？（equals，toString，hashCode）</li>
 <li>项目中用了什么设计模式，具体场景是什么。</li>
 <li>mvp和mvc的区别，项目中是如何应用的。</li>
-<li>APK的打包都经过哪些（从代码到apk的生成）</li>
-<li>说一下LaunchModel，SingleInstance可能在系统中存在多个实例吗？回退栈的顺序。</li>
+<li>APK的打包流程（从代码到apk的生成）</li>
+<li>说一下launchModel，singleInstance可能在系统中存在多个实例吗？回退栈的顺序。</li>
 <li>Touch事件的分发过程，项目里面具体的应用场景，如何解决触摸事件冲突的。</li>
 <li>Android 消息队列是怎么实现的。</li>
-<li>讲解以下性能优化（CPU，内存，过渡绘制，异步加载View）</li>
+<li>讲解以下性能优化</li>
 <li>算法1：用数组实现队列，要求可以从头和尾取，可以扩容（需要写出扩容方法）。</li>
 <li>算法2：背包问题</li>
 <li>算法3：不使用java api实现String转数字。（“123” -&gt;123）;</li>
@@ -402,7 +405,7 @@
 <li>项目里面用了哪些设计模式，具体场景。</li>
 </ol>
 <h2 id="小米"><a href="#小米" class="headerlink" title="小米"></a>小米</h2><ol>
-<li>性能优化怎么做的（cpu，gc，过渡绘制）</li>
+<li>性能优化怎么做的</li>
 <li>Looper，Message，Handler，MessageQueue</li>
 <li>属性动画，和View动画的区别</li>
 <li>自定义View都怎么做的</li>
@@ -410,7 +413,7 @@
 <li>onMeasure方法里的两个参数作用</li>
 <li>动态高斯模糊如何实现的，比如通知栏的背后有个高斯模糊，随着通知栏底下的应用改变，高斯模糊也变化。（在surfaceFlinger合成app的图形之后，进行高斯模糊）</li>
 <li>Notification里的RemoteViews是如何实现的，AppWidget是如何实现的</li>
-<li>AIDL里的方法能够重载吗，提供服务的server端需要考虑线程同步吗，为什么。</li>
+<li>AIDL里的方法能够重载吗（不能），提供服务的server端需要考虑线程同步吗，为什么。</li>
 <li><p>现场出了一个自定义View的题目</p>
 <ol>
 <li>一个ViewGroup，里面的View要求是水平方向的</li>
@@ -636,7 +639,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#蚂蚁金服"><span class="nav-number">1.</span> <span class="nav-text">蚂蚁金服</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题总结："><span class="nav-number">1.1.</span> <span class="nav-text">问题总结：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#美团"><span class="nav-number">2.</span> <span class="nav-text">美团</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#学霸君"><span class="nav-number">3.</span> <span class="nav-text">学霸君</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小米"><span class="nav-number">4.</span> <span class="nav-text">小米</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#陌陌"><span class="nav-number">5.</span> <span class="nav-text">陌陌</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#面试前准备："><span class="nav-number">1.</span> <span class="nav-text">面试前准备：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#蚂蚁金服"><span class="nav-number">2.</span> <span class="nav-text">蚂蚁金服</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#美团"><span class="nav-number">3.</span> <span class="nav-text">美团</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#学霸君"><span class="nav-number">4.</span> <span class="nav-text">学霸君</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小米"><span class="nav-number">5.</span> <span class="nav-text">小米</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#陌陌"><span class="nav-number">6.</span> <span class="nav-text">陌陌</span></a></li></ol></div>
             
 
           </div>
