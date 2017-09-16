@@ -1,0 +1,910 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,LayoutInflater,布局解析过程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/uploads/avatar.png?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="备注：  本篇文章所引用的源码版本：android-sdk-21  简述：简单的说，LayoutInflater就是是一个用来解析xml布局文件的类。该篇文章将对LayoutInflater类进行分析，内容包括： 1. LayoutInflater在哪里创建 2. 如何获取LayoutInflater对象 3. 视图的创建过程(xml转换成View的过程) 4. inflate方法的两个重要参数(">
+<meta name="keywords" content="Android,LayoutInflater,布局解析过程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android-LayoutInflater布局文件解析过程分析">
+<meta property="og:url" content="http://yoursite.com/post/android-layout-inflate.html/index.html">
+<meta property="og:site_name" content="诸己的博客">
+<meta property="og:description" content="备注：  本篇文章所引用的源码版本：android-sdk-21  简述：简单的说，LayoutInflater就是是一个用来解析xml布局文件的类。该篇文章将对LayoutInflater类进行分析，内容包括： 1. LayoutInflater在哪里创建 2. 如何获取LayoutInflater对象 3. 视图的创建过程(xml转换成View的过程) 4. inflate方法的两个重要参数(">
+<meta property="og:updated_time" content="2017-06-28T09:29:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android-LayoutInflater布局文件解析过程分析">
+<meta name="twitter:description" content="备注：  本篇文章所引用的源码版本：android-sdk-21  简述：简单的说，LayoutInflater就是是一个用来解析xml布局文件的类。该篇文章将对LayoutInflater类进行分析，内容包括： 1. LayoutInflater在哪里创建 2. 如何获取LayoutInflater对象 3. 视图的创建过程(xml转换成View的过程) 4. inflate方法的两个重要参数(">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/post/android-layout-inflate.html/"/>
+
+
+
+
+
+  <title>Android-LayoutInflater布局文件解析过程分析 | 诸己的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">诸己的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">小小fronter</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/post/android-layout-inflate.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="诸己">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="诸己的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android-LayoutInflater布局文件解析过程分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-28T17:29:46+08:00">
+                2017-06-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/View/" itemprop="url" rel="index">
+                    <span itemprop="name">View</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>备注：</strong></p>
+<blockquote>
+<p>本篇文章所引用的源码版本：android-sdk-21</p>
+</blockquote>
+<h2 id="简述："><a href="#简述：" class="headerlink" title="简述："></a>简述：</h2><p>简单的说，LayoutInflater就是是一个用来解析xml布局文件的类。该篇文章将对LayoutInflater类进行分析，内容包括：</p>
+<pre><code>1. LayoutInflater在哪里创建
+2. 如何获取LayoutInflater对象
+3. 视图的创建过程(xml转换成View的过程)
+4. inflate方法的两个重要参数(root、attachToRoot)分析
+</code></pre><hr>
+<h2 id="LayoutInflater的来源："><a href="#LayoutInflater的来源：" class="headerlink" title="LayoutInflater的来源："></a>LayoutInflater的来源：</h2><p>LayoutInflater和其他系统服务一样，也是在ContextImpl类中进行注册的，ContextImpl类中有一个静态代码块，应用程序用到的系统服务都在这进行注册：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">class ContextImpl extends Context &#123;</div><div class="line">	static &#123;</div><div class="line">		// ...</div><div class="line"></div><div class="line">		// 注册ActivityManager服务</div><div class="line">		registerService(ACTIVITY_SERVICE, new ServiceFetcher() &#123;</div><div class="line">                public Object createService(ContextImpl ctx) &#123;</div><div class="line">                    return new ActivityManager(ctx.getOuterContext(), ctx.mMainThread.getHandler());</div><div class="line">                &#125;&#125;);</div><div class="line">		// 注册WindowManager服务</div><div class="line">		registerService(WINDOW_SERVICE, new ServiceFetcher() &#123;</div><div class="line">                Display mDefaultDisplay;</div><div class="line">                public Object getService(ContextImpl ctx) &#123;</div><div class="line">                    Display display = ctx.mDisplay;</div><div class="line">                    if (display == null) &#123;</div><div class="line">                        if (mDefaultDisplay == null) &#123;</div><div class="line">                            DisplayManager dm = (DisplayManager)ctx.getOuterContext().</div><div class="line">                                    getSystemService(Context.DISPLAY_SERVICE);</div><div class="line">                            mDefaultDisplay = dm.getDisplay(Display.DEFAULT_DISPLAY);</div><div class="line">                        &#125;</div><div class="line">                        display = mDefaultDisplay;</div><div class="line">                    &#125;</div><div class="line">                    return new WindowManagerImpl(display);</div><div class="line">                &#125;&#125;);</div><div class="line">		</div><div class="line">		// ....</div><div class="line"></div><div class="line">		// 注册LayoutInflater服务</div><div class="line">		registerService(LAYOUT_INFLATER_SERVICE, new ServiceFetcher() &#123;</div><div class="line">                public Object createService(ContextImpl ctx) &#123;</div><div class="line">                    return PolicyManager.makeNewLayoutInflater(ctx.getOuterContext());</div><div class="line">                &#125;&#125;);</div><div class="line"></div><div class="line">		// ...其他服务的注册，不一一列举，有兴趣可以自己看源码</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	// ...其他代码</div><div class="line"></div><div class="line">	// 存储所有服务的ServiceFetcher集合</div><div class="line">	private static final HashMap&lt;String, ServiceFetcher&gt; SYSTEM_SERVICE_MAP =</div><div class="line">            new HashMap&lt;String, ServiceFetcher&gt;();</div><div class="line"></div><div class="line">	private static void registerService(String serviceName, ServiceFetcher fetcher) &#123;</div><div class="line">	    if (!(fetcher instanceof StaticServiceFetcher)) &#123;</div><div class="line">	        fetcher.mContextCacheIndex = sNextPerContextServiceCacheIndex++;</div><div class="line">	    &#125;</div><div class="line">	    SYSTEM_SERVICE_MAP.put(serviceName, fetcher);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>从代码中可以发现，除了LayoutInflater的注册，还有我们常见的WindowManager、ActivityManager等的注册。所有的注册都调用了静态方法：registerService，这里所有的服务并不是在静态代码块中直接创建，而是采用饥渴式方法，只创建了对应服务的获取器ServiceFetcher对象。在真正使用特定服务的时候才创建，SYSTEM_SERVICE_MAP是一个静态的集合对象，存储了所有服务的获取器（ServiceFetcher）对象，map的键是对应服务的名称。只需要调用获取器（ServiceFetcher）的getService(Context context)方法既可以获取对应的系统服务。</p>
+<p>我们只关注LayoutInflater的获取器（ServiceFetcher）是如何实现的，其getService(Context context);方法调用了com.android.internal.policy.PolicyManager#makeNewLayoutInflater(Context context)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public static LayoutInflater makeNewLayoutInflater(Context context) &#123;</div><div class="line">    return new BridgeInflater(context, RenderAction.getCurrentContext().getProjectCallback());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里提一下，上面代码是android-sdk-21版本的源码，创建了一个BridgeInflater对象，如果是android-sdk-19及以下的源码，PolicyManager#makeNewLayoutInflater方法应该是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public static LayoutInflater makeNewLayoutInflater(Context context) &#123;</div><div class="line">    return sPolicy.makeNewLayoutInflater(context);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>接着调用了com.android.internal.policy.impl.Policy#makeNewLayoutInflater(Context context)方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public LayoutInflater makeNewLayoutInflater(Context context) &#123;</div><div class="line">    return new PhoneLayoutInflater(context);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>也就是说android-sdk-19及以下的版本是创建一个PhoneLayoutInflater对象。</p>
+<p>BridgeInflate和PhoneLayoutInflater都是继承自LayoutInflater，实现了解析xml布局的API，将会在后面分析xml布局文件解析过程时用上。这里不讨论两者的实现以及区别。</p>
+<hr>
+<h2 id="获取LayoutInflater对象："><a href="#获取LayoutInflater对象：" class="headerlink" title="获取LayoutInflater对象："></a>获取LayoutInflater对象：</h2><p>按照上面的逻辑，LayoutInflater不需要我们自己new，framework层已经帮我们创建好，自然也会也会提供API供开发者获取LayoutInflater对象。</p>
+<h3 id="方式一："><a href="#方式一：" class="headerlink" title="方式一："></a>方式一：</h3><p>既然LayoutInflater是在ContextImpl中注册的，Context也提供了接口来获取LayoutInflater服务，也就是Context#getSystemService(String name);方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public Object getSystemService(String name) &#123;</div><div class="line">    ServiceFetcher fetcher = SYSTEM_SERVICE_MAP.get(name);</div><div class="line">    return fetcher == null ? null : fetcher.getService(this);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>该方法从SYSTEM_SERVICE_MAP集合内取出对应服务的获取器ServiceFetcher，并调用其getService方法来获取服务，首次调用的时候，将会调用到ServiceFetcher类的createService方法来创建一个LayoutInflater对象，之后将会返回已经创建好的对象。</p>
+<p>所有的其他获取LayoutInflater对象的方式，都将调用到Context#getSystemService(String name);方法，我们继续往下看看其他方式是如何获取的。</p>
+<h3 id="方式二："><a href="#方式二：" class="headerlink" title="方式二："></a>方式二：</h3><p>通过LayoutInflater#from(context)方法来获取：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public static LayoutInflater from(Context context) &#123;</div><div class="line">    LayoutInflater LayoutInflater =</div><div class="line">            (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);</div><div class="line">    if (LayoutInflater == null) &#123;</div><div class="line">        throw new AssertionError(&quot;LayoutInflater not found.&quot;);</div><div class="line">    &#125;</div><div class="line">    return LayoutInflater;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最终该方式还是调用了方式一中说到的Context#getSystemService(String name);方法，并将LayoutInflater服务名称传递进去。</p>
+<h3 id="方式三："><a href="#方式三：" class="headerlink" title="方式三："></a>方式三：</h3><p>如果在Activity内，可以通过Activity#getLayoutInflater();方法获取LayoutInflater，该方法是Activity封装的一个方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@NonNull</div><div class="line">public LayoutInflater getLayoutInflater() &#123;</div><div class="line">    return getWindow().getLayoutInflater();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Activity里的getWindow返回的是一个PhoneWindow对象，接着看PhoneWindow#getLayoutInflater();<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public LayoutInflater getLayoutInflater() &#123;</div><div class="line">    return mLayoutInflater;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>返回了一个LayoutInflater对象，其初始化是在PhoneWindow的构造方法里：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public PhoneWindow(Context context) &#123;</div><div class="line">    super(context);</div><div class="line">    mLayoutInflater = LayoutInflater.from(context);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>其最终调用了方式二中的LayoutInflater#from(Context context);方法。</p>
+<hr>
+<h2 id="布局解析过程"><a href="#布局解析过程" class="headerlink" title="布局解析过程"></a>布局解析过程</h2><p>接着，分析LayoutInflater是如何将一个xml布局文件解析成一个View对象的。涉及到以下内容：</p>
+<ol>
+<li><strong>LayoutInflater#inflate(…);的四个重构方法</strong></li>
+<li><strong>LayoutInflater#inflate(…);是如何解析视图的</strong></li>
+</ol>
+<h3 id="LayoutInflater-inflate-…-的四个重构方法"><a href="#LayoutInflater-inflate-…-的四个重构方法" class="headerlink" title="LayoutInflater#inflate(…);的四个重构方法"></a>LayoutInflater#inflate(…);的四个重构方法</h3><p>通过LayoutInflater对外提供的四个inflate重构方法来入手视图解析流程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public View inflate(@LayoutRes int resource, @Nullable ViewGroup root);</div><div class="line">public View inflate(XmlPullParser parser, @Nullable ViewGroup root);</div><div class="line">public View inflate(@LayoutRes int resource, @Nullable ViewGroup root, boolean attachToRoot);</div><div class="line">public View inflate(XmlPullParser parser, @Nullable ViewGroup root, boolean attachToRoot);</div></pre></td></tr></table></figure></p>
+<p>调用关系如下：</p>
+<ol>
+<li>第一个重构方法最后调用了第三个重构方法，第三个重构方法最后调用了第四个重构方法。</li>
+<li>第二个重构方法最终调用了第四个重构方法</li>
+</ol>
+<p>第一个：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public View inflate(int resource, ViewGroup root) &#123;</div><div class="line">	// 调用第三个重构方法</div><div class="line">    return inflate(resource, root, root != null);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>第二个：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public View inflate(XmlPullParser parser, ViewGroup root) &#123;</div><div class="line">	// 调用第四个重构方法</div><div class="line">    return inflate(parser, root, root != null);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>第三个：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public View inflate(int resource, ViewGroup root, boolean attachToRoot) &#123;</div><div class="line">    final Resources res = getContext().getResources();</div><div class="line">    if (DEBUG) &#123;</div><div class="line">        Log.d(TAG, &quot;INFLATING from resource: \&quot;&quot; + res.getResourceName(resource) + &quot;\&quot; (&quot;</div><div class="line">                + Integer.toHexString(resource) + &quot;)&quot;);</div><div class="line">    &#125;</div><div class="line">	// 通过resource资源文件获取xml解析器</div><div class="line">    final XmlResourceParser parser = res.getLayout(resource);</div><div class="line">    try &#123;</div><div class="line">	    // 调用第四个重构方法</div><div class="line">        return inflate(parser, root, attachToRoot);</div><div class="line">    &#125; finally &#123;</div><div class="line">        parser.close();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>第四个：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public View inflate(XmlPullParser parser, ViewGroup root, boolean attachToRoot) &#123;</div><div class="line">    // 省略内容，后面分析</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>真正开始布局的解析流程的是第四个重构方法，也就是说我们只要分析第四个重构方法的流程就能知道xml布局文件是如何被解析的。</p>
+<h3 id="LayoutInflater-inflate-…-是如何解析视图的"><a href="#LayoutInflater-inflate-…-是如何解析视图的" class="headerlink" title="LayoutInflater#inflate(…);是如何解析视图的"></a>LayoutInflater#inflate(…);是如何解析视图的</h3><p>视图的解析过程可以总结成：</p>
+<ol>
+<li>使用XmlPullParser遍历xml文件内的所有节点</li>
+<li>在遍历到某一节点时，根据节点名字生成对应的View对象</li>
+<li>在生成View对象时，将AttributeSet以及Context传递给View对象的构造方法，在构造方法中，View或者其子类将通过AttributeSet获取自身的属性列表，并用来初始化View。如background等属性。</li>
+</ol>
+<p>在分析视图的解析过程之前，需要先了解什么是XmlPullParser，他是第二个和第四个重构方法的参数，XmlPullParser是一个接口，定义了一系列解析xml文件的API。</p>
+<p>java中解析xml的常用方式有DOM和SAX两种方式，pull解析是android提供的一种。</p>
+<p>这里引用一段对pull方式的描述：</p>
+<blockquote>
+<p>在android系统中，很多资源文件中,很多都是xml格式，在android系统中解析这些xml的方式，是使用pul解析器进行解析的，它和sax解析一样（个人感觉要比sax简单点），也是采用事件驱动进行解析的，当pull解析器，开始解析之后，我们可以调用它的next（）方法，来获取下一个解析事件（就是开始文档，结束文档，开始标签，结束标签），当处于某个元素时可以调用XmlPullParser的getAttributte()方法来获取属性的值，也可调用它的nextText()获取本节点的值。</p>
+</blockquote>
+<p>对xml解析方式的使用有兴趣可以参阅：<br><a href="http://www.cnblogs.com/JerryWang1991/archive/2012/02/24/2365507.html" target="_blank" rel="external">android解析XML总结（SAX、Pull、Dom三种方式）</a></p>
+<p>那么XmlPullParser对象是如何生成的。看看重构方法三：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">final XmlResourceParser parser = res.getLayout(resource);</div></pre></td></tr></table></figure></p>
+<p>res是Resource类对象，resource是资源文件id，看看Resource#getLayout(int id);方法的实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public XmlResourceParser getLayout(int id) throws NotFoundException &#123;</div><div class="line">    return loadXmlResourceParser(id, &quot;layout&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Resource#loadXmlResourceParser(int id, String type);方法最终将会返回一个XmlBlock#Parser类型的对象：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">final class XmlBlock &#123;</div><div class="line">	// ...</div><div class="line">	final class Parser implements XmlResourceParser &#123;</div><div class="line">		// ...</div><div class="line">	&#125;</div><div class="line">	// ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>XmlResourceParser继承自XmlPullParser、AttributeSet以及AutoCloseable（一个定义了不使用时需要关闭的接口）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public interface XmlResourceParser extends XmlPullParser, AttributeSet, AutoCloseable &#123;</div><div class="line">    </div><div class="line">    public void close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>也就是说最终返回了一个XmlPullParser接口的实现类Parser，Parser类还实现了AttributeSet接口。</p>
+<p>那么大家经常在View的构造方法里见到的AttributeSet到底什么：</p>
+<blockquote>
+<p>Android引入了pull解析，其中XmlPullParser这个接口定义了操作pull解析方式对xml文件的所有操作接口，包括对节点的操作，对节点内的属性的操作，以及next等接口。而AttributeSet则是Android针对资源文件的特点定义的一个接口，该接口描述了对节点内的属性集的操作接口，除了getAttributeValue、getAttributeCount等一些和XmlPullParser接口相同的接口外。AttributeSet还定义了一些如getIdAttribute、getAttributeResourceValue、getAttributeBooleanValue这些pull解析方式之外的一些带有android特性的接口，相当于是对节点的属性集合的操作接口进行了拓展。</p>
+<p>这样看来，XmlBlock#Parser类除了实现了pull解析方式自带的接口定义外。还实现了AttributeSet接口内定义的一些具有android特性的接口。</p>
+<p>但是Parser内并未存储节点下所有的Attributes(属性)。这些属性都是存在android.content.res.TypedArray内，而如何得到TypedArray类型对象，继续往下看。</p>
+</blockquote>
+<p>回到LayoutInflater#inflate的第四个重构方法，看看是如何使用parser这个xml解析器的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div></pre></td><td class="code"><pre><div class="line">public View inflate(XmlPullParser parser, @Nullable ViewGroup root, boolean attachToRoot) &#123;</div><div class="line">    synchronized (mConstructorArgs) &#123;</div><div class="line">        // ...</div><div class="line"></div><div class="line">		// 因为parser实现了AttributeSet接口，所以这里是强转</div><div class="line">        final AttributeSet attrs = Xml.asAttributeSet(parser);</div><div class="line">        </div><div class="line">        // result是需要return的值</div><div class="line">        View result = root;</div><div class="line"></div><div class="line">        try &#123;</div><div class="line">            // 通过一个循环，寻找根节点</div><div class="line">            int type;</div><div class="line">            while ((type = parser.next()) != XmlPullParser.START_TAG &amp;&amp;</div><div class="line">                    type != XmlPullParser.END_DOCUMENT) &#123;</div><div class="line">                // Empty</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            if (type != XmlPullParser.START_TAG) &#123;</div><div class="line">	            // 如果没找到根节点，报错</div><div class="line">                throw new InflateException(parser.getPositionDescription()</div><div class="line">                        + &quot;: No start tag found!&quot;);</div><div class="line">            &#125;</div><div class="line">			</div><div class="line">			// 找到了根节点，获取根节点的名称</div><div class="line">            final String name = parser.getName();</div><div class="line"></div><div class="line">            if (TAG_MERGE.equals(name)) &#123;</div><div class="line">	            // 如果根节点是merge标签</div><div class="line">                if (root == null || !attachToRoot) &#123;</div><div class="line">	                // merge标签要求传入的ViewGroup不能是空，并且attachToRoot必须为true， 否则报错</div><div class="line">                    throw new InflateException(&quot;&lt;merge /&gt; can be used only with a valid &quot;</div><div class="line">                            + &quot;ViewGroup root and attachToRoot=true&quot;);</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                // 递归生成根节点下的所有子节点</div><div class="line">                rInflate(parser, root, inflaterContext, attrs, false);</div><div class="line">            &#125; else &#123;</div><div class="line">                // 根据节点的信息（名称、属性）生成根节点View对象</div><div class="line">                final View temp = createViewFromTag(root, name, inflaterContext, attrs);</div><div class="line"></div><div class="line">                // 根节点的LayoutParams属性</div><div class="line">                ViewGroup.LayoutParams params = null;</div><div class="line"></div><div class="line">                if (root != null) &#123;</div><div class="line">                	// 如果传入的ViewGroup不为空</div><div class="line"></div><div class="line">                    // 调用root的generateLayoutParams方法来生成根节点的LayoutParams属性对象</div><div class="line">                    params = root.generateLayoutParams(attrs);</div><div class="line">                    if (!attachToRoot) &#123;</div><div class="line">                        // 不需要讲根节点添加到传入的ViewGroup节点下，则将LayoutParams对象设置到根节点内</div><div class="line">                        // 否则的话在后面将会通过addView方式设置params</div><div class="line">                        temp.setLayoutParams(params);</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                if (DEBUG) &#123;</div><div class="line">                    System.out.println(&quot;-----&gt; start inflating children&quot;);</div><div class="line">                    // 开始解析所有子节点</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                // 解析根节点下的子节点</div><div class="line">                rInflateChildren(parser, temp, attrs, true);</div><div class="line"></div><div class="line">                if (DEBUG) &#123;</div><div class="line">                    System.out.println(&quot;-----&gt; done inflating children&quot;);</div><div class="line">                    // 结束了所有子节点的解析</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                if (root != null &amp;&amp; attachToRoot) &#123;</div><div class="line">                	// 如果传入的ViewGroup不是空，并且需要添加根节点到其下面</div><div class="line">                    root.addView(temp, params);</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                if (root == null || !attachToRoot) &#123;</div><div class="line">                	// 如果根节点为空，或者是attachToRoot为false，返回根节点</div><div class="line">                    result = temp;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125; catch (XmlPullParserException e) &#123;</div><div class="line">            // ....</div><div class="line">        &#125; catch (Exception e) &#123;</div><div class="line">            // ....</div><div class="line">        &#125; finally &#123;</div><div class="line">            // ....</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        // return 结果（根节点或者是传入的ViewGroup）</div><div class="line">        return result;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里有几个比较关键的地方，一一进行分析：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 根据节点的信息（名称、属性）生成根节点View对象</div><div class="line">final View temp = createViewFromTag(root, name, inflaterContext, attrs);</div></pre></td></tr></table></figure>
+<p>createViewFromTag方法创建了对应节点的View对象：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line">View createViewFromTag(View parent, String name, Context context, AttributeSet attrs,</div><div class="line">        boolean ignoreThemeAttr) &#123;</div><div class="line">    if (name.equals(&quot;view&quot;)) &#123;</div><div class="line">    	// 如果节点名字为view，则取节点下面的class属性作为名字</div><div class="line">        name = attrs.getAttributeValue(null, &quot;class&quot;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 不使用默认Theme属性的这部分逻辑跳过不讲</div><div class="line">    if (!ignoreThemeAttr) &#123;</div><div class="line">        final TypedArray ta = context.obtainStyledAttributes(attrs, ATTRS_THEME);</div><div class="line">        final int themeResId = ta.getResourceId(0, 0);</div><div class="line">        if (themeResId != 0) &#123;</div><div class="line">            context = new ContextThemeWrapper(context, themeResId);</div><div class="line">        &#125;</div><div class="line">        ta.recycle();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 几点名称为blink的时候，创建一个BlinkLayout类对象，继承自FrameLayout。</div><div class="line">    if (name.equals(TAG_1995)) &#123;</div><div class="line">        // Let&apos;s party like it&apos;s 1995!</div><div class="line">        return new BlinkLayout(context, attrs);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    try &#123;</div><div class="line">        View view;</div><div class="line"></div><div class="line">        // mFactory和mFactory2是两个工厂类，可以对视图的创建进行hook，暂时不分析</div><div class="line">        if (mFactory2 != null) &#123;</div><div class="line">            view = mFactory2.onCreateView(parent, name, context, attrs);</div><div class="line">        &#125; else if (mFactory != null) &#123;</div><div class="line">            view = mFactory.onCreateView(name, context, attrs);</div><div class="line">        &#125; else &#123;</div><div class="line">            view = null;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        // 和mFactory类似，暂不分析</div><div class="line">        if (view == null &amp;&amp; mPrivateFactory != null) &#123;</div><div class="line">            view = mPrivateFactory.onCreateView(parent, name, context, attrs);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        // 最终会走到这，</div><div class="line">        if (view == null) &#123;</div><div class="line">        	// View的构造方法参数：context</div><div class="line">            final Object lastContext = mConstructorArgs[0];</div><div class="line">            mConstructorArgs[0] = context;</div><div class="line">            try &#123;</div><div class="line">                if (-1 == name.indexOf(&apos;.&apos;)) &#123;</div><div class="line">                	// 如果节点名字不带&quot;.&quot;，说明是系统提供的View(Button/TextView等)，走系统View的创建流程，android.view包下的</div><div class="line">                    view = onCreateView(parent, name, attrs);</div><div class="line">                &#125; else &#123;</div><div class="line">                	// 否则则说明是自定义View，走自定义View的创建流程</div><div class="line">                    view = createView(name, null, attrs);</div><div class="line">                &#125;</div><div class="line">            &#125; finally &#123;</div><div class="line">                mConstructorArgs[0] = lastContext;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        // 返回解析出来的View</div><div class="line">        return view;</div><div class="line">    &#125; catch (InflateException e) &#123;</div><div class="line">    	// ...</div><div class="line">    &#125; catch (ClassNotFoundException e) &#123;</div><div class="line">        // ...</div><div class="line">    &#125; catch (Exception e) &#123;</div><div class="line">        // ...</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>最终会调用LayoutInflater#createView方法来创建指定名字的View（调用onCreateView方法最后也会调用createView方法）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line">public final View createView(String name, String prefix, AttributeSet attrs)</div><div class="line">            throws ClassNotFoundException, InflateException &#123;</div><div class="line"></div><div class="line">    // sConstructorMap存储了所有解析过的View的构造方法Constructor</div><div class="line">    Constructor&lt;? extends View&gt; constructor = sConstructorMap.get(name);</div><div class="line">    // 待解析的View的Class</div><div class="line">    Class&lt;? extends View&gt; clazz = null;</div><div class="line"></div><div class="line">    try &#123;</div><div class="line">        if (constructor == null) &#123;</div><div class="line">        	// 缓存中没有该类型的构造方法，也就是之前没有解析过该Class类型的View，</div><div class="line">        	// 通过反射获取Constructor对象，并缓存</div><div class="line">            clazz = mContext.getClassLoader().loadClass(</div><div class="line">                    prefix != null ? (prefix + name) : name).asSubclass(View.class);</div><div class="line">            </div><div class="line">            // Filter这个东西是用来拦截节点解析的，</div><div class="line">            // onLoadClass返回false的话，将会调用failNotAllowed，就是报错，不允许解析</div><div class="line">            if (mFilter != null &amp;&amp; clazz != null) &#123;</div><div class="line">                boolean allowed = mFilter.onLoadClass(clazz);</div><div class="line">                if (!allowed) &#123;</div><div class="line">                    failNotAllowed(name, prefix, attrs);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            // 反射获取Constructor对象，并缓存</div><div class="line">            constructor = clazz.getConstructor(mConstructorSignature);</div><div class="line">            constructor.setAccessible(true);</div><div class="line">            sConstructorMap.put(name, constructor);</div><div class="line">        &#125; else &#123;</div><div class="line">            if (mFilter != null) &#123;</div><div class="line">                // 如果有拦截器的话，需要通过缓存的拦截信息判断是否需要拦截解析，</div><div class="line">                // 如果未缓存拦截信息的话，则动态从mFilter#onLoadClass中取出拦截信息</div><div class="line">                Boolean allowedState = mFilterMap.get(name);</div><div class="line">                if (allowedState == null) &#123;</div><div class="line">                    // New class -- remember whether it is allowed</div><div class="line">                    clazz = mContext.getClassLoader().loadClass(</div><div class="line">                            prefix != null ? (prefix + name) : name).asSubclass(View.class);</div><div class="line">                    </div><div class="line">                    boolean allowed = clazz != null &amp;&amp; mFilter.onLoadClass(clazz);</div><div class="line">                    mFilterMap.put(name, allowed);</div><div class="line">                    if (!allowed) &#123;</div><div class="line">                        failNotAllowed(name, prefix, attrs);</div><div class="line">                    &#125;</div><div class="line">                &#125; else if (allowedState.equals(Boolean.FALSE)) &#123;</div><div class="line">                    failNotAllowed(name, prefix, attrs);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        Object[] args = mConstructorArgs;</div><div class="line">        // View的构造方法里第二个参数是AttributeSet，一个用来解析属性的对象</div><div class="line">        args[1] = attrs;</div><div class="line"></div><div class="line">        // View对象的真正创建</div><div class="line">        final View view = constructor.newInstance(args);</div><div class="line">        if (view instanceof ViewStub) &#123;</div><div class="line">            // 如果是ViewStub的话，需要为其设置一个copy的LayoutInflater</div><div class="line">            final ViewStub viewStub = (ViewStub) view;</div><div class="line">            viewStub.setLayoutInflater(cloneInContext((Context) args[0]));</div><div class="line">        &#125;</div><div class="line">        // 返回结果</div><div class="line">        return view;</div><div class="line"></div><div class="line">    &#125; catch (NoSuchMethodException e) &#123;</div><div class="line">	    // 这个报错比较重要</div><div class="line">        InflateException ie = new InflateException(attrs.getPositionDescription()</div><div class="line">                + &quot;: Error inflating class &quot;</div><div class="line">                + (prefix != null ? (prefix + name) : name));</div><div class="line">        ie.initCause(e);</div><div class="line">        throw ie;</div><div class="line">    &#125; catch (ClassCastException e) &#123;</div><div class="line">        // ...</div><div class="line">    &#125; catch (ClassNotFoundException e) &#123;</div><div class="line">        // ...</div><div class="line">    &#125; catch (Exception e) &#123;</div><div class="line">        // ...</div><div class="line">    &#125; finally &#123;</div><div class="line">        // ...</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>LayoutInflater是通过反射的方式创建View，并将context以及AttributeSet对象作为参数传入。</p>
+<p>也就是说如果用户自定义View的时候，没有重写带两个参数的构造方法的话，将会报错。代码将会走到上面NoSuchMethodException这个catch中。例如下面这个报错信息（注意注释部分）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">FATAL EXCEPTION: main</div><div class="line">Process: com.example.j_liuchaoqun.myapplication, PID: 26075</div><div class="line">java.lang.RuntimeException: Unable to start activity ComponentInfo&#123;com.example.j_liuchaoqun.myapplication/com.example.j_liuchaoqun.myapplication.MainActivity&#125;: android.view.InflateException: Binary XML file line #13: Binary XML file line #13: Error inflating class com.example.j_liuchaoqun.myapplication.SlideTextView</div><div class="line">    at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2793)</div><div class="line">    at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2864)</div><div class="line">    at android.app.ActivityThread.-wrap12(ActivityThread.java)</div><div class="line">    at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1567)</div><div class="line">    at android.os.Handler.dispatchMessage(Handler.java:102)</div><div class="line">    at android.os.Looper.loop(Looper.java:156)</div><div class="line">    at android.app.ActivityThread.main(ActivityThread.java:6524)</div><div class="line">    at java.lang.reflect.Method.invoke(Native Method)</div><div class="line">    at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:941)</div><div class="line">    at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:831)</div><div class="line"> Caused by: android.view.InflateException: Binary XML file line #13: Binary XML file line #13: Error inflating class com.example.j_liuchaoqun.myapplication.SlideTextView</div><div class="line"> Caused by: android.view.InflateException: Binary XML file line #13: Error inflating class com.example.j_liuchaoqun.myapplication.SlideTextView</div><div class="line"></div><div class="line"> // 大家主要看下面这行信息，在createView(LayoutInflater.java:625)方法中反射时，提示缺少一个SlideTextView(Context context, AttributeSet set);的构造方法。</div><div class="line"> </div><div class="line"> Caused by: java.lang.NoSuchMethodException: &lt;init&gt; [class android.content.Context, interface android.util.AttributeSet]</div><div class="line">    at java.lang.Class.getConstructor0(Class.java:2204)</div><div class="line">    at java.lang.Class.getConstructor(Class.java:1683)</div><div class="line">    at android.view.LayoutInflater.createView(LayoutInflater.java:625)</div><div class="line">    at android.view.LayoutInflater.createViewFromTag(LayoutInflater.java:798)</div><div class="line">    at android.view.LayoutInflater.createViewFromTag(LayoutInflater.java:738)</div><div class="line">    at android.view.LayoutInflater.rInflate(LayoutInflater.java:869)</div><div class="line">    at android.view.LayoutInflater.rInflateChildren(LayoutInflater.java:832)</div><div class="line">    at android.view.LayoutInflater.inflate(LayoutInflater.java:518)</div><div class="line">    at android.view.LayoutInflater.inflate(LayoutInflater.java:426)</div><div class="line">    at android.view.LayoutInflater.inflate(LayoutInflater.java:377)</div><div class="line">    at android.support.v7.app.AppCompatDelegateImplV7.setContentView(AppCompatDelegateImplV7.java:255)</div><div class="line">    at android.support.v7.app.AppCompatActivity.setContentView(AppCompatActivity.java:109)</div><div class="line">    at com.example.j_liuchaoqun.myapplication.MainActivity.onCreate(MainActivity.java:11)</div><div class="line">    at android.app.Activity.performCreate(Activity.java:6910)</div><div class="line">    at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1123)</div><div class="line">    at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2746)</div><div class="line">    at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2864)</div><div class="line">    at android.app.ActivityThread.-wrap12(ActivityThread.java)</div><div class="line">    at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1567)</div><div class="line">    at android.os.Handler.dispatchMessage(Handler.java:102)</div><div class="line">    at android.os.Looper.loop(Looper.java:156)</div><div class="line">    at android.app.ActivityThread.main(ActivityThread.java:6524)</div><div class="line">    at java.lang.reflect.Method.invoke(Native Method)</div><div class="line">    at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:941)</div><div class="line">    at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:831)</div></pre></td></tr></table></figure></p>
+<p>在API21中，将会调用到View的一个四个参数的构造方法，低版本API中可能只有三个构造方法，但不管如何，最后都会调用到参数最多的那个构造方法，并在该方法中对View进行初始化，而初始化的信息，都将通过AttributeSet生成的TypedArray对象来获取。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">public View(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) &#123;</div><div class="line">    this(context);</div><div class="line"></div><div class="line">    // 解析styleable.View的所有属性</div><div class="line">    final TypedArray a = context.obtainStyledAttributes(</div><div class="line">            attrs, com.android.internal.R.styleable.View, defStyleAttr, defStyleRes);</div><div class="line"></div><div class="line">    // ...</div><div class="line"></div><div class="line">    // 遍历解析出来的所有属性，并设置为当前View对象</div><div class="line">    final int N = a.getIndexCount();</div><div class="line">    for (int i = 0; i &lt; N; i++) &#123;</div><div class="line">        int attr = a.getIndex(i);</div><div class="line">        switch (attr) &#123;</div><div class="line">            case com.android.internal.R.styleable.View_background:</div><div class="line">            	// 背景</div><div class="line">                background = a.getDrawable(attr);</div><div class="line">                break;</div><div class="line">            &#125;</div><div class="line">            // ...其他case</div><div class="line">            default:</div><div class="line">            	break;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里对其构造方法进行了简化，可以看到，AttributeSet是在这里使用的，通过context.obtainStyledAttributes方法将attrs.xml下定义的View这个styable属性集解析出来，android源码中的attrs.xml文件中定义了View的所有属性：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line">&lt;!-- Attributes that can be used with &#123;@link android.view.View&#125; or</div><div class="line">     any of its subclasses.  Also see &#123;@link #ViewGroup_Layout&#125; for</div><div class="line">     attributes that are processed by the view&apos;s parent. --&gt;</div><div class="line">&lt;declare-styleable name=&quot;View&quot;&gt;</div><div class="line">    &lt;!-- Supply an identifier name for this view, to later retrieve it</div><div class="line">         with &#123;@link android.view.View#findViewById View.findViewById()&#125; or</div><div class="line">         &#123;@link android.app.Activity#findViewById Activity.findViewById()&#125;.</div><div class="line">         This must be a</div><div class="line">         resource reference; typically you set this using the</div><div class="line">         &lt;code&gt;@+&lt;/code&gt; syntax to create a new ID resources.</div><div class="line">         For example: &lt;code&gt;android:id=&quot;@+id/my_id&quot;&lt;/code&gt; which</div><div class="line">         allows you to later retrieve the view</div><div class="line">         with &lt;code&gt;findViewById(R.id.my_id)&lt;/code&gt;. --&gt;</div><div class="line">    &lt;attr name=&quot;id&quot; format=&quot;reference&quot; /&gt;</div><div class="line"></div><div class="line">    &lt;!-- Supply a tag for this view containing a String, to be retrieved</div><div class="line">         later with &#123;@link android.view.View#getTag View.getTag()&#125; or</div><div class="line">         searched for with &#123;@link android.view.View#findViewWithTag</div><div class="line">         View.findViewWithTag()&#125;.  It is generally preferable to use</div><div class="line">         IDs (through the android:id attribute) instead of tags because</div><div class="line">         they are faster and allow for compile-time type checking. --&gt;</div><div class="line">    &lt;attr name=&quot;tag&quot; format=&quot;string&quot; /&gt;</div><div class="line"></div><div class="line">    &lt;!-- The initial horizontal scroll offset, in pixels.--&gt;</div><div class="line">    &lt;attr name=&quot;scrollX&quot; format=&quot;dimension&quot; /&gt;</div><div class="line"></div><div class="line">    &lt;!-- The initial vertical scroll offset, in pixels. --&gt;</div><div class="line">    &lt;attr name=&quot;scrollY&quot; format=&quot;dimension&quot; /&gt;</div><div class="line"></div><div class="line">    &lt;!-- A drawable to use as the background.  This can be either a reference</div><div class="line">         to a full drawable resource (such as a PNG image, 9-patch,</div><div class="line">         XML state list description, etc), or a solid color such as &quot;#ff000000&quot;</div><div class="line">        (black). --&gt;</div><div class="line">    &lt;attr name=&quot;background&quot; format=&quot;reference|color&quot; /&gt;</div><div class="line"></div><div class="line">    &lt;!-- Sets the padding, in pixels, of all four edges.  Padding is defined as</div><div class="line">         space between the edges of the view and the view&apos;s content. A views size</div><div class="line">         will include it&apos;s padding.  If a &#123;@link android.R.attr#background&#125;</div><div class="line">         is provided, the padding will initially be set to that (0 if the</div><div class="line">         drawable does not have padding).  Explicitly setting a padding value</div><div class="line">         will override the corresponding padding found in the background. --&gt;</div><div class="line">    &lt;attr name=&quot;padding&quot; format=&quot;dimension&quot; /&gt;</div><div class="line">    &lt;!-- Sets the padding, in pixels, of the left edge; see &#123;@link android.R.attr#padding&#125;. --&gt;</div><div class="line">    &lt;attr name=&quot;paddingLeft&quot; format=&quot;dimension&quot; /&gt;</div><div class="line">    &lt;!-- Sets the padding, in pixels, of the top edge; see &#123;@link android.R.attr#padding&#125;. --&gt;</div><div class="line">    &lt;attr name=&quot;paddingTop&quot; format=&quot;dimension&quot; /&gt;</div><div class="line">    &lt;!-- Sets the padding, in pixels, of the right edge; see &#123;@link android.R.attr#padding&#125;. --&gt;</div><div class="line">    &lt;attr name=&quot;paddingRight&quot; format=&quot;dimension&quot; /&gt;</div><div class="line">    &lt;!-- Sets the padding, in pixels, of the bottom edge; see &#123;@link android.R.attr#padding&#125;. --&gt;</div><div class="line">    &lt;attr name=&quot;paddingBottom&quot; format=&quot;dimension&quot; /&gt;</div><div class="line">    &lt;!-- Sets the padding, in pixels, of the start edge; see &#123;@link android.R.attr#padding&#125;. --&gt;</div><div class="line">    &lt;attr name=&quot;paddingStart&quot; format=&quot;dimension&quot; /&gt;</div><div class="line">    &lt;!-- Sets the padding, in pixels, of the end edge; see &#123;@link android.R.attr#padding&#125;. --&gt;</div><div class="line">    &lt;attr name=&quot;paddingEnd&quot; format=&quot;dimension&quot; /&gt;</div><div class="line"></div><div class="line">    &lt;!-- 属性太多，不一一列举 --&gt;</div><div class="line">&lt;/declare-styleable&gt;</div></pre></td></tr></table></figure>
+<p>当然，如果你是View的子类，也有对应的属性，比如ListView：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&lt;declare-styleable name=&quot;ListView&quot;&gt;</div><div class="line">    &lt;!-- Reference to an array resource that will populate the ListView.  For static content,</div><div class="line">         this is simpler than populating the ListView programmatically. --&gt;</div><div class="line">    &lt;attr name=&quot;entries&quot; /&gt;</div><div class="line">    &lt;!-- Drawable or color to draw between list items. --&gt;</div><div class="line">    &lt;attr name=&quot;divider&quot; format=&quot;reference|color&quot; /&gt;</div><div class="line">    &lt;!-- Height of the divider. Will use the intrinsic height of the divider if this</div><div class="line">         is not specified. --&gt;</div><div class="line">    &lt;attr name=&quot;dividerHeight&quot; format=&quot;dimension&quot; /&gt;</div><div class="line">    &lt;!-- When set to false, the ListView will not draw the divider after each header view.</div><div class="line">         The default value is true. --&gt;</div><div class="line">    &lt;attr name=&quot;headerDividersEnabled&quot; format=&quot;boolean&quot; /&gt;</div><div class="line">    &lt;!-- When set to false, the ListView will not draw the divider before each footer view.</div><div class="line">         The default value is true. --&gt;</div><div class="line">    &lt;attr name=&quot;footerDividersEnabled&quot; format=&quot;boolean&quot; /&gt;</div><div class="line">    &lt;!-- Drawable to draw above list content. --&gt;</div><div class="line">    &lt;attr name=&quot;overScrollHeader&quot; format=&quot;reference|color&quot; /&gt;</div><div class="line">    &lt;!-- Drawable to draw below list content. --&gt;</div><div class="line">    &lt;attr name=&quot;overScrollFooter&quot; format=&quot;reference|color&quot; /&gt;</div><div class="line">&lt;/declare-styleable&gt;</div></pre></td></tr></table></figure>
+<p>对应在ListView的构造方法里有：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">public ListView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) &#123;</div><div class="line">    super(context, attrs, defStyleAttr, defStyleRes);</div><div class="line"></div><div class="line">	// ...</div><div class="line"></div><div class="line">    final TypedArray a = context.obtainStyledAttributes(</div><div class="line">            attrs, R.styleable.ListView, defStyleAttr, defStyleRes);</div><div class="line">	</div><div class="line">	// 从节点中获取Divider属性，如果有定义的话，设置到ListView中</div><div class="line">	final Drawable d = a.getDrawable(R.styleable.ListView_divider);</div><div class="line">	if (d != null) &#123;</div><div class="line">	    // Use an implicit divider height which may be explicitly</div><div class="line">	    // overridden by android:dividerHeight further down.</div><div class="line">	    setDivider(d);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	// 其他ListView提供的属性...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>至此，xml中<strong>根节点</strong>的解析过程告一段落。</p>
+<p>那么LayoutInflater是如何解析xml下的其他子节点的？ 回过头来看LayoutInflater#inflate第四个重构方法里有一段代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 解析根节点下的子节点</div><div class="line">rInflateChildren(parser, temp, attrs, true);</div></pre></td></tr></table></figure>
+<p>该方法将会遍历View的所有子节点，并调用createViewFromTag对每一个节点进行解析，并把解析出来的View添加到父节点中。具体内如如何实现，大家可以看看源码。与xml的根节点解析类似。</p>
+<h3 id="inflate方法的attachToRoot（Boolean）参数"><a href="#inflate方法的attachToRoot（Boolean）参数" class="headerlink" title="inflate方法的attachToRoot（Boolean）参数"></a>inflate方法的attachToRoot（Boolean）参数</h3><p>attachToRoot是inflate接收的一个参数，它有两重作用：</p>
+<ol>
+<li><strong>表示是否需要将解析出来的xml根节点add到传入的root布局中（如果root不为空的话）。</strong></li>
+<li><strong>如果attachToRoot为true，则inflate方法将返回root对象，否则，将返回解析出来的xml根节点View对象。</strong></li>
+</ol>
+<h3 id="inflate方法的root（ViewGroup）参数"><a href="#inflate方法的root（ViewGroup）参数" class="headerlink" title="inflate方法的root（ViewGroup）参数"></a>inflate方法的root（ViewGroup）参数</h3><p><strong>如果root不为空，将会调用root的generateLayoutParams方法为xml跟布局生成LayoutParams对象。generateLayoutParams是ViewGroup中定义的方法。它的子类可以对其进行重写，以返回对应类型的LayoutParams</strong></p>
+<p>FrameLayout#generateLayoutParams(android.util.AttributeSet)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public LayoutParams generateLayoutParams(AttributeSet attrs) &#123;</div><div class="line">    return new FrameLayout.LayoutParams(getContext(), attrs);        </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>RelativeLayout#generateLayoutParams(android.util.AttributeSet):<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public LayoutParams generateLayoutParams(AttributeSet attrs) &#123;</div><div class="line">    return new RelativeLayout.LayoutParams(getContext(), attrs);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以发现，如果传入的root是FrameLayout类型的话，将会生成FrameLayout.LayoutParams，如果传入的root是RelativeLayout类型的话，将会生成RelativeLayout.LayoutParams。</p>
+<p>根据这样的规律，分析下面两种情况：</p>
+<ol>
+<li>xml根节点定义了属性android:layout_centerHorizontal=”true”，而inflate方法传入的root对象为FrameLayout类型，此时android:layout_centerHorizontal将会失效，因为FrameLayout.LayoutParam对象并不支持layout_centerHorizontal属性。</li>
+<li>xml根节点定义了属性android:layout_gravity=”center”，而inflate方法传入的的root对象为RelativeLayout类型，此时android:layout_gravity也会失效，因为RelativeLayout.LayoutParams并不支持layout_gravity属性。</li>
+<li>同理还需要考虑LinearLayout.LayoutParams所支持的属性与xml根节点定义的属性是否有冲突。</li>
+</ol>
+<p><strong>如果传入的root对象为空，xml根节点的所有的以“layout_”开头的属性都将失效，因为没有root对象来为根节点生成对应的LayoutParams对象。</strong></p>
+<p>针对该特性，如果传入的root为空，将出现类似如根节点定义的宽高失效，如我定义的根节点宽度为50dp，高度也为50dp，最后显示出来的效果却是一个wrap_content的效果。为什么会出现上述原因，是因为如果根节点没有LayoutParams对象，那么在它被add到某一个ViewGroup上的时候，将会自动生成一个宽高为wrap_content的LayoutParams对象：</p>
+<p>ViewGroup#addView(android.view.View, int):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public void addView(View child, int index) &#123;</div><div class="line">    if (child == null) &#123;</div><div class="line">        throw new IllegalArgumentException(&quot;Cannot add a null child view to a ViewGroup&quot;);</div><div class="line">    &#125;</div><div class="line">    LayoutParams params = child.getLayoutParams();</div><div class="line">    if (params == null) &#123;</div><div class="line">	    // 如果LayoutParams为空的话，生成默认的</div><div class="line">        params = generateDefaultLayoutParams();</div><div class="line">        if (params == null) &#123;</div><div class="line">            throw new IllegalArgumentException(&quot;generateDefaultLayoutParams() cannot return null&quot;);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    addView(child, index, params);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>ViewGroup#generateDefaultLayoutParams：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">protected LayoutParams generateDefaultLayoutParams() &#123;</div><div class="line">    return new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>LayoutInflater是android用来解析xml布局文件的一个类</li>
+<li>LayoutInflater内部使用Pull解析的方式，并对其进行了一定的扩展。</li>
+<li>LayoutInflater在生成View节点的时候，是通过反射的方式创建View对象，<br>反射调用的构造方法是带两个参数的那个，所以在定义View的时候必须重写带两个参数的构造方法。</li>
+<li>LayoutInflater在创建View对象的时候，会将xml节点的解析器AttributeSet传入到View的构造方法中。AttributeSet定义了用来解析xml节点属性的API。View通过AttributeSet生成TypedArray，并从中读取View节点中定义的属性。</li>
+<li>最后LayoutInflater将会通过递归的方式创建xml根节点下的所有孩子节点。</li>
+<li>LayoutInflater#inflate方法接收一个root对象以及一个Boolean类型的attachToRoot变量。这两个参数的值，直接影响了inflate方法的返回值，以及生成的xml根节点的LayoutParams和属性。</li>
+</ol>
+<hr>
+<p>本文结束，感谢欣赏。</p>
+<p><strong>欢迎转载，请注明本文的链接地址：</strong></p>
+<p><a href="http://wwangc.me/post/android-layout-inflate.html" target="_blank" rel="external">http://wwangc.me/post/android-layout-inflate.html</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/LayoutInflater/" rel="tag"># LayoutInflater</a>
+          
+            <a href="/tags/布局解析过程/" rel="tag"># 布局解析过程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/post/android-overdraw.html/" rel="prev" title="Android过度绘制解决方案">
+                Android过度绘制解决方案 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="uyan_frame"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="诸己" />
+          <p class="site-author-name" itemprop="name">诸己</p>
+           
+              <p class="site-description motion-element" itemprop="description">热衷前端新技术、勇于做新尝试，更喜欢积累过去。</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/chaoqunL" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简述："><span class="nav-number">1.</span> <span class="nav-text">简述：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LayoutInflater的来源："><span class="nav-number">2.</span> <span class="nav-text">LayoutInflater的来源：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取LayoutInflater对象："><span class="nav-number">3.</span> <span class="nav-text">获取LayoutInflater对象：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方式一："><span class="nav-number">3.1.</span> <span class="nav-text">方式一：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方式二："><span class="nav-number">3.2.</span> <span class="nav-text">方式二：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方式三："><span class="nav-number">3.3.</span> <span class="nav-text">方式三：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#布局解析过程"><span class="nav-number">4.</span> <span class="nav-text">布局解析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LayoutInflater-inflate-…-的四个重构方法"><span class="nav-number">4.1.</span> <span class="nav-text">LayoutInflater#inflate(…);的四个重构方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LayoutInflater-inflate-…-是如何解析视图的"><span class="nav-number">4.2.</span> <span class="nav-text">LayoutInflater#inflate(…);是如何解析视图的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inflate方法的attachToRoot（Boolean）参数"><span class="nav-number">4.3.</span> <span class="nav-text">inflate方法的attachToRoot（Boolean）参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inflate方法的root（ViewGroup）参数"><span class="nav-number">4.4.</span> <span class="nav-text">inflate方法的root（ViewGroup）参数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">诸己</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    
+
+    
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2137612"></script>
+      <!-- UY END -->
+    
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
