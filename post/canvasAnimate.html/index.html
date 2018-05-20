@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="前端,canvas,序列帧动画," />
 
 
 
@@ -93,15 +93,19 @@
 
 
 
-<meta name="description" content="前端er,我是员不是猿...">
-<meta property="og:type" content="website">
-<meta property="og:title" content="诸己的博客">
-<meta property="og:url" content="http://yoursite.com/tags/序列帧动画/index.html">
+<meta name="description" content="####一个canvas实现序列帧的案例-开红包动画： initCanvas(callback){         let canvas = document.querySelector(&amp;apos;#canvas&amp;apos;);  //获取canvas对象         canvas.width = &amp;apos;300&amp;apos;;         canvas.height = &amp;apos;">
+<meta name="keywords" content="前端,canvas,序列帧动画">
+<meta property="og:type" content="article">
+<meta property="og:title" content="canvas实现序列帧动画的案例">
+<meta property="og:url" content="http://yoursite.com/post/canvasAnimate.html/index.html">
 <meta property="og:site_name" content="诸己的博客">
-<meta property="og:description" content="前端er,我是员不是猿...">
+<meta property="og:description" content="####一个canvas实现序列帧的案例-开红包动画： initCanvas(callback){         let canvas = document.querySelector(&amp;apos;#canvas&amp;apos;);  //获取canvas对象         canvas.width = &amp;apos;300&amp;apos;;         canvas.height = &amp;apos;">
+<meta property="og:image" content="http://yoursite.com/uploads/canvas-animation/1.jpg">
+<meta property="og:updated_time" content="2018-05-20T12:38:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="诸己的博客">
-<meta name="twitter:description" content="前端er,我是员不是猿...">
+<meta name="twitter:title" content="canvas实现序列帧动画的案例">
+<meta name="twitter:description" content="####一个canvas实现序列帧的案例-开红包动画： initCanvas(callback){         let canvas = document.querySelector(&amp;apos;#canvas&amp;apos;);  //获取canvas对象         canvas.width = &amp;apos;300&amp;apos;;         canvas.height = &amp;apos;">
+<meta name="twitter:image" content="http://yoursite.com/uploads/canvas-animation/1.jpg">
 
 
 
@@ -129,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/序列帧动画/"/>
+  <link rel="canonical" href="http://yoursite.com/post/canvasAnimate.html/"/>
 
 
 
 
 
-  <title>标签: 序列帧动画 | 诸己的博客</title>
+  <title>canvas实现序列帧动画的案例 | 诸己的博客</title>
   
 
 
@@ -160,7 +164,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -254,44 +258,232 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h1>序列帧动画<small>标签</small>
-      </h1>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/post/canvasAnimate.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="诸己">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="诸己的博客">
+    </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">canvas实现序列帧动画的案例</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-28T17:50:30+08:00">
+                2017-06-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/前端/canvas/" itemprop="url" rel="index">
+                    <span itemprop="name">canvas</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <p>####一个canvas实现序列帧的案例-开红包动画：</p>
+<pre><code>initCanvas(callback){
+        let canvas = document.querySelector(&apos;#canvas&apos;);  //获取canvas对象
+        canvas.width = &apos;300&apos;;
+        canvas.height = &apos;300&apos;;
 
-      <h2 class="post-title">
+        let ctx = canvas.getContext(&apos;2d&apos;);           //获取2d上下文
+        let frame = 0       //帧数
+        let img = new Image();                          //创建img
+        img.src = &apos;https://p5.ssl.qhimg.com/d/inn/bec43552e015/line3.png&apos;;//给img添加资源
+        let imgW = 8000;//整张大图的宽度
+        let x = 0, y = 0, w = 400, h = 400, iX = 0, iY = 0;
+        let animate = function() {
+            //定义一个帧数的变量,函数每一帧执行一次,则frame就加一次,以此记录帧数
+            frame++;
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+            //每过8帧执行一次 x += w 以此达到切换图片的效果
+            if(frame % 8 === 0 ) {
+                x += w
+                if (x &gt;= imgW - w) {   //判定当走到最后一张
+                    callback &amp;&amp; callback();
+                    return;
+                }
+            }
+            //每隔一帧就执行绘画飞机的操作
+            ctx.drawImage(img, x, y, w, h, iX, iY, 300, 300);
+            //为避免frame加到太大,在这里做一个当frame加到10000时,又让它为0的操作
+            if(frame &gt; 10000 ) {
+                frame = 0;
+            }
+            //利用requestAnimationFrame达到动画效果
+            requestAnimationFrame(animate);
+        }
+
+        img.onload = function(){
+            //定义变量:图片截取的位置(x,y) 图片截取的宽高(w,h), 截取的飞机在canvas中的位置(iX, iY)
+            animate();
+        }
+    }
+</code></pre><p>####帧图片素材<br>一张图片上放满每一帧的图片，eg:<br><img src="/uploads/canvas-animation/1.jpg" alt="HTTPS握手过程1"></p>
+<p><strong>欢迎转载，请注明本文的链接地址：</strong></p>
+<p><a href="https://chaoqunl.cc/post/canvasAnimate.html" target="_blank" rel="external">https://chaoqunl.cc/post/canvasAnimate.html</a></p>
+
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/post/canvasAnimate.html/" itemprop="url">
-              
-                <span itemprop="name">canvas实现序列帧动画的案例</span>
-              
-            </a>
+
+      
+    </div>
+
+    <div>
+      
         
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-06-28T17:50:30+08:00"
-              content="2017-06-28" >
-          06-28
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+            <a href="/tags/canvas/" rel="tag"># canvas</a>
+          
+            <a href="/tags/序列帧动画/" rel="tag"># 序列帧动画</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/post/css-structure.html/" rel="next" title="css基础学习框架">
+                <i class="fa fa-chevron-left"></i> css基础学习框架
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -299,6 +491,12 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="uyan_frame"></div>
+    
+  </div>
+
 
         </div>
         
@@ -532,10 +730,10 @@
 
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
 
-  
+
 
   
 
@@ -567,6 +765,10 @@
   
     
 
+    
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2137612"></script>
+      <!-- UY END -->
     
   
 
