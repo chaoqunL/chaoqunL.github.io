@@ -93,19 +93,17 @@
 
 
 
-<meta name="description" content="一个canvas实现序列帧的案例-开红包动画：initCanvas(callback){         let canvas = document.querySelector(&amp;apos;#canvas&amp;apos;);  //获取canvas对象         canvas.width = &amp;apos;300&amp;apos;;         canvas.height = &amp;apos;300&amp;a">
+<meta name="description" content="ssssss">
 <meta name="keywords" content="前端,canvas,序列帧动画">
 <meta property="og:type" content="article">
 <meta property="og:title" content="canvas实现序列帧动画的案例">
 <meta property="og:url" content="http://yoursite.com/post/canvasAnimate.html/index.html">
 <meta property="og:site_name" content="诸己的博客">
-<meta property="og:description" content="一个canvas实现序列帧的案例-开红包动画：initCanvas(callback){         let canvas = document.querySelector(&amp;apos;#canvas&amp;apos;);  //获取canvas对象         canvas.width = &amp;apos;300&amp;apos;;         canvas.height = &amp;apos;300&amp;a">
-<meta property="og:image" content="http://yoursite.com/uploads/canvas-animation/1.png">
-<meta property="og:updated_time" content="2018-05-20T12:41:07.000Z">
+<meta property="og:description" content="ssssss">
+<meta property="og:updated_time" content="2018-09-02T15:25:31.584Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="canvas实现序列帧动画的案例">
-<meta name="twitter:description" content="一个canvas实现序列帧的案例-开红包动画：initCanvas(callback){         let canvas = document.querySelector(&amp;apos;#canvas&amp;apos;);  //获取canvas对象         canvas.width = &amp;apos;300&amp;apos;;         canvas.height = &amp;apos;300&amp;a">
-<meta name="twitter:image" content="http://yoursite.com/uploads/canvas-animation/1.png">
+<meta name="twitter:description" content="ssssss">
 
 
 
@@ -370,48 +368,7 @@
       
 
       
-        <h3 id="一个canvas实现序列帧的案例-开红包动画："><a href="#一个canvas实现序列帧的案例-开红包动画：" class="headerlink" title="一个canvas实现序列帧的案例-开红包动画："></a>一个canvas实现序列帧的案例-开红包动画：</h3><pre><code>initCanvas(callback){
-        let canvas = document.querySelector(&apos;#canvas&apos;);  //获取canvas对象
-        canvas.width = &apos;300&apos;;
-        canvas.height = &apos;300&apos;;
-
-        let ctx = canvas.getContext(&apos;2d&apos;);           //获取2d上下文
-        let frame = 0       //帧数
-        let img = new Image();                          //创建img
-        img.src = &apos;https://p5.ssl.qhimg.com/d/inn/bec43552e015/line3.png&apos;;//给img添加资源
-        let imgW = 8000;//整张大图的宽度
-        let x = 0, y = 0, w = 400, h = 400, iX = 0, iY = 0;
-        let animate = function() {
-            //定义一个帧数的变量,函数每一帧执行一次,则frame就加一次,以此记录帧数
-            frame++;
-            ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-            //每过8帧执行一次 x += w 以此达到切换图片的效果
-            if(frame % 8 === 0 ) {
-                x += w
-                if (x &gt;= imgW - w) {   //判定当走到最后一张
-                    callback &amp;&amp; callback();
-                    return;
-                }
-            }
-            //每隔一帧就执行绘画飞机的操作
-            ctx.drawImage(img, x, y, w, h, iX, iY, 300, 300);
-            //为避免frame加到太大,在这里做一个当frame加到10000时,又让它为0的操作
-            if(frame &gt; 10000 ) {
-                frame = 0;
-            }
-            //利用requestAnimationFrame达到动画效果
-            requestAnimationFrame(animate);
-        }
-
-        img.onload = function(){
-            //定义变量:图片截取的位置(x,y) 图片截取的宽高(w,h), 截取的飞机在canvas中的位置(iX, iY)
-            animate();
-        }
-    }
-</code></pre><h3 id="帧图片素材"><a href="#帧图片素材" class="headerlink" title="帧图片素材"></a>帧图片素材</h3><p>一张图片上放满每一帧的图片，eg:<br><img src="/uploads/canvas-animation/1.png" alt="HTTPS握手过程1"></p>
-<p><strong>欢迎转载，请注明本文的链接地址：</strong></p>
-<p><a href="https://chaoqunl.cc/post/canvasAnimate.html" target="_blank" rel="external">https://chaoqunl.cc/post/canvasAnimate.html</a></p>
+        <p>ssssss</p>
 
       
     </div>
@@ -468,6 +425,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/post/canvasAnimate.html/" rel="prev" title="canvas实现序列帧动画的案例">
+                canvas实现序列帧动画的案例 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -515,17 +476,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/avatar.png"
@@ -540,7 +492,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -598,22 +550,6 @@
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一个canvas实现序列帧的案例-开红包动画："><span class="nav-number">1.</span> <span class="nav-text">一个canvas实现序列帧的案例-开红包动画：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#帧图片素材"><span class="nav-number">2.</span> <span class="nav-text">帧图片素材</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
