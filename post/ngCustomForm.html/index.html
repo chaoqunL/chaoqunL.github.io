@@ -100,7 +100,7 @@
 <meta property="og:url" content="http://yoursite.com/post/ngCustomForm.html/index.html">
 <meta property="og:site_name" content="诸己的博客">
 <meta property="og:description" content="导语 Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。  响应式表单Reactive Forms (Model-Driven Forms) 的实现 模块导入：必须在 @NgModule 中导入 @angular/forms 库中的 Reactiv">
-<meta property="og:updated_time" content="2018-11-12T06:23:47.487Z">
+<meta property="og:updated_time" content="2018-11-12T06:25:46.365Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="angular自定义表单组件总结">
 <meta name="twitter:description" content="导语 Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。  响应式表单Reactive Forms (Model-Driven Forms) 的实现 模块导入：必须在 @NgModule 中导入 @angular/forms 库中的 Reactiv">
@@ -376,7 +376,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">  import &#123; ReactiveFormsModule &#125; from &apos;@angular/forms&apos;;</div><div class="line">  @NgModule(&#123;</div><div class="line">  imports: [</div><div class="line">    ...,</div><div class="line">    ReactiveFormsModule</div><div class="line">  ],</div><div class="line">  declarations: [...],</div><div class="line">  exports: [...],</div><div class="line">     entryComponents: [...],</div><div class="line">&#125;)</div><div class="line">export class CustormFormModule &#123;&#125;</div></pre></td></tr></table></figure>
 </li>
 <li><p>FormControl、FormGroup、FormBuilder 的概念和使用。<br>FormControl - 它是一个为单个表单控件提供支持的类，可用于跟踪控件的值和验证状态（比如是否有效、是否脏（被修改过）或是否有错误等），此外还提供了一系列公共API。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// create a new FormControl with the value &quot;Nate&quot; </div><div class="line">let application_title = new FormControl(&quot;标题默认值&quot;);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// create a new FormControl with the value &quot;defaultTitleValue&quot; </div><div class="line">let application_title = new FormControl(&quot;defaultTitleValue&quot;);</div></pre></td></tr></table></figure>
 <p>在Angular中，我们经常将一个类（本例中为FormControl）以属性形式（本例中为formControl）附加在DOM上</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;input type=&quot;text&quot; [formControl]=&quot;application_title&quot; /&gt;</div></pre></td></tr></table></figure>
 <p>FormGroup - 是包含一组 FormControl 的实例，可用于跟踪 FormControl 组的值和验证状态，此外也提供了一系列公共API。</p>
@@ -428,8 +428,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/post/css-structure.html/" rel="next" title="css基础学习框架">
-                <i class="fa fa-chevron-left"></i> css基础学习框架
+              <a href="/post/canvasAnimate.html/" rel="next" title="canvas实现序列帧动画的案例">
+                <i class="fa fa-chevron-left"></i> canvas实现序列帧动画的案例
               </a>
             
           </div>
@@ -437,10 +437,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/post/canvasAnimate.html/" rel="prev" title="canvas实现序列帧动画的案例">
-                canvas实现序列帧动画的案例 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
