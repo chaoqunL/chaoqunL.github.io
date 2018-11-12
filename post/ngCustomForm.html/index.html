@@ -102,7 +102,7 @@
 <meta property="og:description" content="导语 Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。  响应式表单Reactive Forms (Model-Driven Forms) 的实现 模块导入：必须在 @NgModule 中导入 @angular/forms 库中的 Reactiv">
 <meta property="og:image" content="http://yoursite.com/uploads/ngCustomForm/formControl1.png">
 <meta property="og:image" content="http://yoursite.com/uploads/ngCustomForm/formGroup.png">
-<meta property="og:updated_time" content="2018-11-12T07:35:30.953Z">
+<meta property="og:updated_time" content="2018-11-12T08:15:28.538Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="angular自定义表单组件总结">
 <meta name="twitter:description" content="导语 Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。  响应式表单Reactive Forms (Model-Driven Forms) 的实现 模块导入：必须在 @NgModule 中导入 @angular/forms 库中的 Reactiv">
@@ -377,8 +377,20 @@
 <h3 id="响应式表单Reactive-Forms-Model-Driven-Forms-的实现"><a href="#响应式表单Reactive-Forms-Model-Driven-Forms-的实现" class="headerlink" title="响应式表单Reactive Forms (Model-Driven Forms) 的实现"></a>响应式表单Reactive Forms (Model-Driven Forms) 的实现</h3><ul>
 <li><p>模块导入：必须在 @NgModule 中导入 @angular/forms 库中的 ReactiveFormsModule</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">  import &#123; ReactiveFormsModule &#125; from &apos;@angular/forms&apos;;</div><div class="line">  @NgModule(&#123;</div><div class="line">	imports: [</div><div class="line">	...,</div><div class="line">	ReactiveFormsModule</div><div class="line">	],</div><div class="line">	declarations: [...],</div><div class="line">	exports: [...],</div><div class="line">	entryComponents: [...],</div><div class="line">&#125;)</div><div class="line">export class CustormFormModule &#123;&#125;</div></pre></td></tr></table></figure>
+<p>响应式表单参考链接：<a href="https://angular.cn/guide/reactive-forms" target="_blank" rel="external">https://angular.cn/guide/reactive-forms</a></p>
 </li>
-<li><p>FormControl、FormGroup、FormBuilder 的概念和使用。<br>FormControl - 它是一个为单个表单控件提供支持的类，可用于跟踪控件的值和验证状态（比如是否有效、是否脏（被修改过）或是否有错误等），此外还提供了一系列公共API。</p>
+<li><p>FormControl、FormGroup、FormBuilder 的概念和使用。<br>无论响应式表单还是模板驱动表单都共享了一些底层构造块。</p>
+<ul>
+<li>FormControl 实例用于追踪单个表单控件的值和验证状态。它和 FormGroup 和 FormArray 是 Angular   表单的三大基本构造块之一。 它扩展了 AbstractControl 类，并实现了关于访问值、验证状态、用户交互和事件的大部分基本功能</li>
+<li>FormGroup 实例用于追踪一个表单控件集的值和状态。管理一组 AbstractControl 实例的值和有效性状态。该组的属性中包括了它的子控件。组件中的顶级表单就是 FormGroup。</li>
+<li>FormArray 实例用于追踪一个表单控件数组的值和状态。管理一些 AbstractControl 实例数组的值和有效性状态。</li>
+<li>ControlValueAccessor 用于在 Angular 的 FormControl 实例和原生 DOM 元素之间创建一个桥梁。</li>
+<li>FormBuilder 使用用户指定的配置创建 AbstractControl。FormBuilder 服务提供了一些便捷方法来生成表单控件。一个可注入的服务，提供一些用于提供创建控件实例的工厂方法。 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">      class FormBuilder &#123;</div><div class="line">	group(controlsConfig: &#123;...&#125;, extra: &#123;...&#125;): FormGroup</div><div class="line">	control(formState: any, validator?: ValidatorFn | ValidatorFn[] | null, asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null): FormControl</div><div class="line">	array(controlsConfig: any[], validator?: ValidatorFn | ValidatorFn[] | null, asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null): FormArray</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>当使用响应式表单时，FormControl 类是最基本的构造块。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">   import &#123;</div><div class="line">       FormControl,</div><div class="line">    FormGroup,</div><div class="line">    FormBuilder,</div><div class="line">&#125; from &apos;@angular/forms&apos;;</div></pre></td></tr></table></figure>
+<p>FormControl - 它是一个为单个表单控件提供支持的类，可用于跟踪控件的值和验证状态（比如是否有效、是否脏（被修改过）或是否有错误等），此外还提供了一系列公共API。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// create a new FormControl with the value &quot;defaultTitleValue&quot; </div><div class="line">let application_title = new FormControl(&quot;defaultTitleValue&quot;); </div><div class="line">// create a new FormControl with the value null</div><div class="line">let application_title = new FormControl(null);</div></pre></td></tr></table></figure>
 <p>在Angular中，我们经常将一个类（本例中为FormControl）以属性形式（本例中为formControl）附加在DOM上</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;input type=&quot;text&quot; [formControl]=&quot;application_title&quot; /&gt;</div></pre></td></tr></table></figure>
