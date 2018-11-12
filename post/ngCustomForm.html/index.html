@@ -100,10 +100,12 @@
 <meta property="og:url" content="http://yoursite.com/post/ngCustomForm.html/index.html">
 <meta property="og:site_name" content="诸己的博客">
 <meta property="og:description" content="导语 Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。  响应式表单Reactive Forms (Model-Driven Forms) 的实现 模块导入：必须在 @NgModule 中导入 @angular/forms 库中的 Reactiv">
-<meta property="og:updated_time" content="2018-11-12T06:30:56.067Z">
+<meta property="og:image" content="http://yoursite.com/uploads/ngCustomForm/formControl.png">
+<meta property="og:updated_time" content="2018-11-12T06:44:10.795Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="angular自定义表单组件总结">
 <meta name="twitter:description" content="导语 Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。  响应式表单Reactive Forms (Model-Driven Forms) 的实现 模块导入：必须在 @NgModule 中导入 @angular/forms 库中的 Reactiv">
+<meta name="twitter:image" content="http://yoursite.com/uploads/ngCustomForm/formControl.png">
 
 
 
@@ -379,7 +381,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// create a new FormControl with the value &quot;defaultTitleValue&quot; </div><div class="line">let application_title = new FormControl(&quot;defaultTitleValue&quot;);</div></pre></td></tr></table></figure>
 <p>在Angular中，我们经常将一个类（本例中为FormControl）以属性形式（本例中为formControl）附加在DOM上</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;input type=&quot;text&quot; [formControl]=&quot;application_title&quot; /&gt;</div></pre></td></tr></table></figure>
-<p>FormGroup - 是包含一组 FormControl 的实例，可用于跟踪 FormControl 组的值和验证状态，此外也提供了一系列公共API。</p>
+<p><img src="/uploads/ngCustomForm/formControl.png" alt="formControl-api"><br>FormGroup - 是包含一组 FormControl 的实例，可用于跟踪 FormControl 组的值和验证状态，此外也提供了一系列公共API。</p>
 </li>
 </ul>
 
