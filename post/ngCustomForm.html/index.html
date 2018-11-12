@@ -102,7 +102,7 @@
 <meta property="og:description" content="导语 Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。  响应式表单Reactive Forms (Model-Driven Forms) 的实现   响应式表单提供了一种模型驱动的方式来处理表单输入。  模块导入：必须在 @NgModule 中">
 <meta property="og:image" content="http://yoursite.com/uploads/ngCustomForm/formControl1.png">
 <meta property="og:image" content="http://yoursite.com/uploads/ngCustomForm/formGroup.png">
-<meta property="og:updated_time" content="2018-11-12T08:24:28.371Z">
+<meta property="og:updated_time" content="2018-11-12T08:32:44.368Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="angular自定义表单组件总结">
 <meta name="twitter:description" content="导语 Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。  响应式表单Reactive Forms (Model-Driven Forms) 的实现   响应式表单提供了一种模型驱动的方式来处理表单输入。  模块导入：必须在 @NgModule 中">
@@ -401,6 +401,10 @@
 <p>FormControl 和 FormGroup结合使用：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;form nz-form [formGroup]=&quot;myGroup&quot;&gt;</div><div class="line">    &lt;nz-form-item&gt;</div><div class="line">  &lt;nz-form-label [nzSm]=&quot;6&quot;&gt;名称:&lt;/nz-form-label&gt;</div><div class="line">  &lt;nz-form-control [nzSm]=&quot;14&quot; &gt;</div><div class="line">      &lt;input [formControlName]=&quot;name&quot; nz-input [placeholder]=&quot;请输入名称&quot;/&gt;</div><div class="line">  &lt;/nz-form-control&gt;</div><div class="line"> &lt;/nz-form-item&gt;</div><div class="line"> &lt;nz-form-item&gt;</div><div class="line">  &lt;nz-form-label [nzSm]=&quot;6&quot;&gt;地址:&lt;/nz-form-label&gt;</div><div class="line">  &lt;nz-form-control [nzSm]=&quot;14&quot; &gt;</div><div class="line">      &lt;input [formControlName]=&quot;location&quot; nz-input [placeholder]=&quot;请输入地址&quot;/&gt;</div><div class="line">  &lt;/nz-form-control&gt;</div><div class="line"> &lt;/nz-form-item&gt;</div><div class="line">&lt;/form&gt;</div></pre></td></tr></table></figure>
 <p><img src="/uploads/ngCustomForm/formGroup.png" alt="formGroup-api"></p>
+<ul>
+<li>formBuilder的使用<br>用 FormBuilder 来代替手工创建这些 FormControl 和 FormGroup 实例。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 注入FormBuilder服务</div><div class="line">constructor(private fb: FormBuilder) &#123; &#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
 </li>
 </ul>
 
