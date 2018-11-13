@@ -93,19 +93,19 @@
 
 
 
-<meta name="description" content="导语 Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。  响应式表单Reactive Forms (Model-Driven Forms) 的实现响应式表单提供了一种模型驱动的方式来处理表单输入。简化了HTML模板的代码，把验证逻辑抽离到组件类中">
+<meta name="description" content="导语 Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。自定义表单可以理解为假设页面有个select按钮，可以根据户选择的选项option不同，生成对应选项(策略)需要填写的表单字段组成的表单form。  注：下文都将包含容器的组件称为index.">
 <meta name="keywords" content="前端,angular,自定义表单组件">
 <meta property="og:type" content="article">
 <meta property="og:title" content="angular自定义表单组件总结">
 <meta property="og:url" content="http://yoursite.com/post/ngCustomForm.html/index.html">
 <meta property="og:site_name" content="诸己的博客">
-<meta property="og:description" content="导语 Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。  响应式表单Reactive Forms (Model-Driven Forms) 的实现响应式表单提供了一种模型驱动的方式来处理表单输入。简化了HTML模板的代码，把验证逻辑抽离到组件类中">
+<meta property="og:description" content="导语 Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。自定义表单可以理解为假设页面有个select按钮，可以根据户选择的选项option不同，生成对应选项(策略)需要填写的表单字段组成的表单form。  注：下文都将包含容器的组件称为index.">
 <meta property="og:image" content="http://yoursite.com/uploads/ngCustomForm/formControl1.png">
 <meta property="og:image" content="http://yoursite.com/uploads/ngCustomForm/formGroup.png">
-<meta property="og:updated_time" content="2018-11-13T01:47:04.766Z">
+<meta property="og:updated_time" content="2018-11-13T01:52:38.110Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="angular自定义表单组件总结">
-<meta name="twitter:description" content="导语 Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。  响应式表单Reactive Forms (Model-Driven Forms) 的实现响应式表单提供了一种模型驱动的方式来处理表单输入。简化了HTML模板的代码，把验证逻辑抽离到组件类中">
+<meta name="twitter:description" content="导语 Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。自定义表单可以理解为假设页面有个select按钮，可以根据户选择的选项option不同，生成对应选项(策略)需要填写的表单字段组成的表单form。  注：下文都将包含容器的组件称为index.">
 <meta name="twitter:image" content="http://yoursite.com/uploads/ngCustomForm/formControl1.png">
 
 
@@ -372,8 +372,10 @@
 
       
         <h2 id="导语"><a href="#导语" class="headerlink" title="导语"></a>导语</h2><blockquote>
-<p>Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。</p>
+<p>Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。自定义表单可以理解为假设页面有个select按钮，可以根据户选择的选项option不同，生成对应选项(策略)需要填写的表单字段组成的表单form。</p>
 </blockquote>
+<p>注：下文都将包含容器的组件称为index.component来表述，自定义表单组件称为custom-form.component来表述。<br>其中index文件的目录结构为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">* index</div><div class="line">  * index.component.html</div><div class="line">  * index.component.ts</div></pre></td></tr></table></figure></p>
+<p>其中custom-form文件的目录结构为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">* custom-form</div><div class="line">    * components</div><div class="line">	    * form-field //指令</div><div class="line">	        * form-field.directive.ts</div><div class="line">	    * form-input</div><div class="line">		    * form-input.component.html</div><div class="line">		    * form-input.component.ts</div><div class="line">	    * form-select</div><div class="line">	        * form-select.component.html</div><div class="line">	        * form-select.component.ts</div><div class="line">    * containers</div><div class="line">	    * custom-form.component.html</div><div class="line">	    * custom-form.component.ts</div><div class="line">		* config.ts</div><div class="line">    * custom-form.module.ts</div></pre></td></tr></table></figure></p>
 <h3 id="响应式表单Reactive-Forms-Model-Driven-Forms-的实现"><a href="#响应式表单Reactive-Forms-Model-Driven-Forms-的实现" class="headerlink" title="响应式表单Reactive Forms (Model-Driven Forms) 的实现"></a>响应式表单Reactive Forms (Model-Driven Forms) 的实现</h3><p>响应式表单提供了一种模型驱动的方式来处理表单输入。简化了HTML模板的代码，把验证逻辑抽离到组件类中，更方便跟踪表单控件值的变化。</p>
 <h4 id="模块导入：必须在-NgModule-中导入-angular-forms-库中的-ReactiveFormsModule"><a href="#模块导入：必须在-NgModule-中导入-angular-forms-库中的-ReactiveFormsModule" class="headerlink" title="模块导入：必须在 @NgModule 中导入 @angular/forms 库中的 ReactiveFormsModule"></a>模块导入：必须在 @NgModule 中导入 @angular/forms 库中的 ReactiveFormsModule</h4>   <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">  import &#123; ReactiveFormsModule &#125; from &apos;@angular/forms&apos;;</div><div class="line">  @NgModule(&#123;</div><div class="line">	imports: [</div><div class="line">	...,</div><div class="line">	ReactiveFormsModule</div><div class="line">	],</div><div class="line">	declarations: [...],</div><div class="line">	exports: [...],</div><div class="line">	entryComponents: [...],</div><div class="line">&#125;)</div><div class="line">export class CustormFormModule &#123;&#125;</div></pre></td></tr></table></figure>
 <p>   响应式表单（reactive）和模板驱动表单（template-driven）的简介及对比参考链接：<a href="https://angular.cn/guide/forms-overview" target="_blank" rel="external">https://angular.cn/guide/forms-overview</a><br>   响应式表单参考链接：<a href="https://angular.cn/guide/reactive-forms" target="_blank" rel="external">https://angular.cn/guide/reactive-forms</a></p>
@@ -394,10 +396,8 @@
 <p>FormControl 和 FormGroup结合使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;form nz-form [formGroup]=&quot;myGroup&quot;&gt;</div><div class="line">    &lt;nz-form-item&gt;</div><div class="line">	    &lt;nz-form-label [nzSm]=&quot;6&quot;&gt;名称:&lt;/nz-form-label&gt;</div><div class="line">	    &lt;nz-form-control [nzSm]=&quot;14&quot; &gt;</div><div class="line">	        &lt;input [formControlName]=&quot;name&quot; nz-input [placeholder]=&quot;请输入名称&quot;/&gt;</div><div class="line">	    &lt;/nz-form-control&gt;</div><div class="line">    &lt;/nz-form-item&gt;</div><div class="line">    &lt;nz-form-item&gt;</div><div class="line">	    &lt;nz-form-label [nzSm]=&quot;6&quot;&gt;地址:&lt;/nz-form-label&gt;</div><div class="line">	    &lt;nz-form-control [nzSm]=&quot;14&quot; &gt;</div><div class="line">	        &lt;input [formControlName]=&quot;location&quot; nz-input [placeholder]=&quot;请输入地址&quot;/&gt;</div><div class="line">	    &lt;/nz-form-control&gt;</div><div class="line">    &lt;/nz-form-item&gt;</div><div class="line">&lt;/form&gt;</div></pre></td></tr></table></figure></p>
 <p><img src="/uploads/ngCustomForm/formGroup.png" alt="formGroup-api"></p>
 <h4 id="formBuilder的使用"><a href="#formBuilder的使用" class="headerlink" title="formBuilder的使用"></a>formBuilder的使用</h4><p>FormBuilder 提供了一个语法糖，以简化 FormControl、FormGroup 或 FormArray 实例的创建过程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// 注入FormBuilder服务</div><div class="line">constructor(private fb: FormBuilder) &#123; &#125;</div><div class="line">// 可以单独创建group</div><div class="line">let myGroup = this.fb.group(&#123;</div><div class="line">	name: [&apos;&apos;, [Validators.required, Validators.minLength(2)]],</div><div class="line">    account: this.fb.group(&#123;</div><div class="line">      email: [&apos;&apos;, Validators.required],</div><div class="line">      confirm: [&apos;&apos;, Validators.required]</div><div class="line">    &#125;)</div><div class="line">&#125;);</div><div class="line">// 可以单独创建control</div><div class="line">let let application_title = this.fb.control(&quot;初始值&quot;);</div></pre></td></tr></table></figure></p>
-<h3 id="Angular-4-x-动态创建组件"><a href="#Angular-4-x-动态创建组件" class="headerlink" title="Angular 4.x 动态创建组件"></a>Angular 4.x 动态创建组件</h3><p>动态组件加载的使用背景：组件的模板不会永远是固定的。应用可能会需要在运行期间加载一些新的组件。自定义表单控件可以理解为假设页面有个选择按钮，可以根绝用户选择的选项不同，生成对应选项需要填写的表单字段组成的表单form。</p>
-<h4 id="创建自定义表单组件的容器（在包含容器的组件中）"><a href="#创建自定义表单组件的容器（在包含容器的组件中）" class="headerlink" title="创建自定义表单组件的容器（在包含容器的组件中）"></a>创建自定义表单组件的容器（在包含容器的组件中）</h4><p>注：下文都将包含容器的组件称为index.component来表述，自定义表单组件称为custom-form.component来表述。<br>其中index文件的目录结构为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">* index</div><div class="line">  * index.component.html</div><div class="line">  * index.component.ts</div></pre></td></tr></table></figure></p>
-<p>其中custom-form文件的目录结构为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">* custom-form</div><div class="line">    * components</div><div class="line">	    * form-field //指令</div><div class="line">	        * form-field.directive.ts</div><div class="line">	    * form-input</div><div class="line">		    * form-input.component.html</div><div class="line">		    * form-input.component.ts</div><div class="line">	    * form-select</div><div class="line">	        * form-select.component.html</div><div class="line">	        * form-select.component.ts</div><div class="line">    * containers</div><div class="line">	    * custom-form.component.html</div><div class="line">	    * custom-form.component.ts</div><div class="line">		* config.ts</div><div class="line">    * custom-form.module.ts</div></pre></td></tr></table></figure></p>
-<p>1.创建组件容器</p>
+<h3 id="Angular-4-x-动态创建组件"><a href="#Angular-4-x-动态创建组件" class="headerlink" title="Angular 4.x 动态创建组件"></a>Angular 4.x 动态创建组件</h3><p>动态组件加载的使用背景：组件的模板不会永远是固定的。应用可能会需要在运行期间加载一些新的组件。</p>
+<h4 id="创建自定义表单组件的容器（在包含容器的组件中）"><a href="#创建自定义表单组件的容器（在包含容器的组件中）" class="headerlink" title="创建自定义表单组件的容器（在包含容器的组件中）"></a>创建自定义表单组件的容器（在包含容器的组件中）</h4><p>1.创建组件容器</p>
 <p>ViewContainerRef：表示可以将一个或多个视图附着到组件中的容器。在index.component.ts中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">import &#123; ViewContainerRef &#125; from &apos;@angular/core&apos;;</div><div class="line">export class IndexComponent &#123;</div><div class="line">    container: ViewContainerRef; // IndexComponent 注入了 ViewContainerRef 来获取对容器视图的访问权，这个容器就是那些动态加入的组件的宿主</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
 <p>2.加载组件，自定义表单组件的主要构造代码在custom-form.component.ts中</p>
 <p>2.componentRef = ViewContainerRef.createComponent(componentFactory):实例化一个使用componentFactory工厂创建的 Component 并把它的宿主视图插入到当前容器中，返回包含宿主视图的新组件的实例。<br>在上述场景中，点击select按钮，则执行相关操作来在容器中动态载入内嵌视图的话，相关操作应该是以下这样的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
@@ -447,8 +447,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/post/css-structure.html/" rel="next" title="css基础学习框架">
-                <i class="fa fa-chevron-left"></i> css基础学习框架
+              <a href="/post/canvasAnimate.html/" rel="next" title="canvas实现序列帧动画的案例">
+                <i class="fa fa-chevron-left"></i> canvas实现序列帧动画的案例
               </a>
             
           </div>
@@ -456,10 +456,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/post/canvasAnimate.html/" rel="prev" title="canvas实现序列帧动画的案例">
-                canvas实现序列帧动画的案例 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
