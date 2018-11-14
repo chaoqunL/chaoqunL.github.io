@@ -103,7 +103,7 @@
 <meta property="og:image" content="http://yoursite.com/uploads/ngCustomForm/formControl1.png">
 <meta property="og:image" content="http://yoursite.com/uploads/ngCustomForm/formGroup.png">
 <meta property="og:image" content="http://yoursite.com/uploads/ngCustomForm/viewContainerRef.png">
-<meta property="og:updated_time" content="2018-11-14T03:46:45.924Z">
+<meta property="og:updated_time" content="2018-11-14T06:11:00.957Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="angular自定义表单组件总结">
 <meta name="twitter:description" content="导语 Angular 4.x 动态创建表单是基于Angular 响应式表单（Angular 4.x Reactive Forms）和动态创建组件（Angular 4.x 动态创建组件）这两个知识点结合实现的。自定义表单可以理解为假设页面有个select按钮，可以根据户选择的选项option不同，生成对应选项(策略)需要填写的表单字段组成的表单form。  注：下文都将包含容器的组件称为index.">
@@ -416,7 +416,7 @@
 </ul>
 <p>上述，我们已经看到如何创建嵌入和宿主视图。 一旦创建了视图，就可以使用ViewContainer将其插入到DOM中。<br>ViewContainerRef：Represents a container where one or more views can be attached to a component.<br>从ViewContainerRef的定义可以看出，ViewContainerRef是可以附加一个或多个视图的容器。<br><img src="/uploads/ngCustomForm/viewContainerRef.png" alt="ViewContainerRef类的定义"><br>ViewContainerRef的说明：可以包含宿主视图（通过使用createComponent()方法实例化组件创建）和嵌入视图 （通过TemplateRef使用createEmbeddedView()方法实例化创建）<br>ViewContainerRef.createComponent（）：实例化单个组件并将其宿主视图插入此容器。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">abstract createComponent&lt;C&gt;(componentFactory: ComponentFactory&lt;C&gt;, index?: number, injector?: Injector, projectableNodes?: any[][], ngModule?: NgModuleRef&lt;any&gt;): ComponentRef&lt;C&gt; //返回ComponentRef&lt;C&gt;：包含主机视图的新组件。</div></pre></td></tr></table></figure></p>
 <p>在上面代码中，我们调用容器的 createComponent() 方法，该方法内部将调用 ComponentFactory 实例的 create() 方法创建对应的组件，并将组件添加到我们的容器。并返回ComponentRef实例。<br>ComponentRef：Represents a component created by a ComponentFactory. Provides access to the component instance and related objects。<br>此后通过 this.component.instance 访问到组件类的实例。设置组件的输入类型，如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">this.componentRef.instance.type = type;</div></pre></td></tr></table></figure></p>
-<h3 id="Angular-4-x-动态创建表单"><a href="#Angular-4-x-动态创建表单" class="headerlink" title="Angular 4.x 动态创建表单"></a>Angular 4.x 动态创建表单</h3><h4 id="模块导入"><a href="#模块导入" class="headerlink" title="模块导入"></a>模块导入</h4><p>上面我们已经讲了CustomFormModule的构建注意事项，接着我们需要在 IndexModule 中导入该模块：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import &#123; CustomFormModule &#125; from &apos;custom-form/custom-form.module&apos;;</div></pre></td></tr></table></figure></p>
+<h3 id="Angular-4-x-动态创建表单"><a href="#Angular-4-x-动态创建表单" class="headerlink" title="Angular 4.x 动态创建表单"></a>Angular 4.x 动态创建表单</h3><h4 id="模块导入"><a href="#模块导入" class="headerlink" title="模块导入"></a>模块导入</h4><p>上面我们已经讲了CustomFormModule的构建注意事项，接着我们需要在 IndexModule 中导入该模块（在之前导入组件的基础上），所以就变成以下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">import &#123; CustomFormModule &#125; from &apos;custom-form/custom-form.module&apos;;</div><div class="line">import &#123; CustomFormComponent &#125; from &apos;custom-form/custom-form.component&apos;;</div><div class="line">@NgModule(&#123;</div><div class="line">    imports: [CustomFormModule], // add</div><div class="line">    declarations: [IndexComponent],</div><div class="line">    bootstrap: [IndexComponent],</div><div class="line">    entryComponents: [CustomFormComponent],</div><div class="line">    exports: [CustomFormModule], // 看是否需要导出</div><div class="line">&#125;)</div><div class="line">export class IndexModule &#123; &#125;</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -463,8 +463,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/post/canvasAnimate.html/" rel="next" title="canvas实现序列帧动画的案例">
-                <i class="fa fa-chevron-left"></i> canvas实现序列帧动画的案例
+              <a href="/post/css-structure.html/" rel="next" title="css基础学习框架">
+                <i class="fa fa-chevron-left"></i> css基础学习框架
               </a>
             
           </div>
@@ -472,6 +472,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/post/canvasAnimate.html/" rel="prev" title="canvas实现序列帧动画的案例">
+                canvas实现序列帧动画的案例 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
