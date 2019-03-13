@@ -118,7 +118,11 @@
 <meta property="og:image" content="http://yoursite.com/uploads/webpackBuildReact/init16.png">
 <meta property="og:image" content="http://yoursite.com/uploads/webpackBuildReact/init17.png">
 <meta property="og:image" content="http://yoursite.com/uploads/webpackBuildReact/init18.png">
-<meta property="og:updated_time" content="2019-03-13T15:35:32.917Z">
+<meta property="og:image" content="http://yoursite.com/uploads/webpackBuildReact/init19.png">
+<meta property="og:image" content="http://yoursite.com/uploads/webpackBuildReact/init20.png">
+<meta property="og:image" content="http://yoursite.com/uploads/webpackBuildReact/init21.png">
+<meta property="og:image" content="http://yoursite.com/uploads/webpackBuildReact/init22.png">
+<meta property="og:updated_time" content="2019-03-13T15:44:49.994Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="react+webpack+es6组合">
 <meta name="twitter:description" content="1.首先全局安装webpack : npm install webpack -g 2.创建空项目buildReactPro，然后初始化项目：npm init 生成package.json基础格式文件： 3.局部安装webpack：npm install webpack –save-dev（参数 –save-dev 意思是开发时依赖webpack）注：至于为什么webpack(webpack-dev">
@@ -414,9 +418,12 @@
 <li>scss文件中@import全局样式文件（也可以使用webpack resove.alias别名的路径）<br><img src="/uploads/webpackBuildReact/init15.png" alt="project-init15"><br><img src="/uploads/webpackBuildReact/init16.png" alt="project-init16"></li>
 <li>另一种也常用的是css-module方式（通过hash避免类名覆盖）<ul>
 <li>写法：className={styles.userInfo}</li>
-<li>需要webpack的css-loader加载器中配置选项，开启CSS Modules  <a href="https://github.com/camsong/blog/issues/5" target="_blank" rel="external">https://github.com/camsong/blog/issues/5</a><br><img src="/uploads/webpackBuildReact/init17.png" alt="project-init17"><br>*此时dev模式下传统的通过className=”xxx”的形式（上面说的那种为组件元素引入样式文件的方式）将不再起作用，也就是类名还在但是样式没带上来了。<br>、、、<br>// webpack.config.js<br>css?modules&amp;localIdentName=[name]__[local]-[hash:base64:5] // localIdentName 是设置生成样式(类名)的命名规则<br>、、、<br><img src="/uploads/webpackBuildReact/init18.png" alt="project-init18"></li>
+<li>需要webpack的css-loader加载器中配置选项，开启CSS Modules  <a href="https://github.com/camsong/blog/issues/5" target="_blank" rel="external">https://github.com/camsong/blog/issues/5</a><br><img src="/uploads/webpackBuildReact/init17.png" alt="project-init17"><br>*此时dev模式下传统的通过className=”xxx”的形式（上面说的那种为组件元素引入样式文件的方式）将不再起作用，也就是类名还在但是样式没带上来了。<br>、、、<br>// webpack.config.js<br>css?modules&amp;localIdentName=[name]__[local]-[hash:base64:5] // localIdentName 是设置生成样式(类名)的命名规则<br>、、、<br><img src="/uploads/webpackBuildReact/init18.png" alt="project-init18"><br><img src="/uploads/webpackBuildReact/init19.png" alt="project-init19"></li>
+<li>给css-loader设置sourceMap: true<br>style引入改为link引入：<br><img src="/uploads/webpackBuildReact/init20.png" alt="project-init20"><br>可以指向源文件路径：<br><img src="/uploads/webpackBuildReact/init21.png" alt="project-init21"></li>
+<li>css-module的类命名采用小驼峰法，如blockChecbox<br>13.图片（文件）编译（resolve）<br><img src="/uploads/webpackBuildReact/init22.png" alt="project-init22"><br>webppack file-loader vs url-loader</li>
 </ul>
 </li>
+<li>file-loader: 指示webpack将所需对象作为文件发出并返回其public URL</li>
 </ul>
 
       
@@ -466,8 +473,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/post/ngCustomForm.html/" rel="next" title="angular自定义表单组件总结">
-                <i class="fa fa-chevron-left"></i> angular自定义表单组件总结
+              <a href="/post/canvasAnimate.html/" rel="next" title="canvas实现序列帧动画的案例">
+                <i class="fa fa-chevron-left"></i> canvas实现序列帧动画的案例
               </a>
             
           </div>
