@@ -113,7 +113,7 @@
 <meta property="og:image" content="http://yoursite.com/uploads/webpackBuildReact/init11.png">
 <meta property="og:image" content="http://yoursite.com/uploads/webpackBuildReact/init12.png">
 <meta property="og:image" content="http://yoursite.com/uploads/webpackBuildReact/init13.png">
-<meta property="og:updated_time" content="2019-03-13T15:18:22.621Z">
+<meta property="og:updated_time" content="2019-03-13T15:24:30.246Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="react+webpack+es6组合">
 <meta name="twitter:description" content="1.首先全局安装webpack : npm install webpack -g 2.创建空项目buildReactPro，然后初始化项目：npm init 生成package.json基础格式文件： 3.局部安装webpack：npm install webpack –save-dev（参数 –save-dev 意思是开发时依赖webpack）注：至于为什么webpack(webpack-dev">
@@ -402,7 +402,12 @@
 <p>10.配置模块解析，使模块引入更简单 resolve-alias<br><img src="/uploads/webpackBuildReact/init12.png" alt="project-init12"></p>
 <p>11.用babel编译jsx:</p>
 <p>.babelrc不能少，否则不能识别jsx元素<br><img src="/uploads/webpackBuildReact/init13.png" alt="project-init13"></p>
-
+<p>12.解析样式文件</p>
+<p>一种是传统的import “xxx.scss”到js文件（组件中）,scss文件中类名采用bem规范（通过这个规范避免类名覆盖）。使用类名时类似className=”home-info-bg”。</p>
+<ul>
+<li>解析样式文件-scss：<br>| css-loader | 解析css文件语法及import导入,如import xxx from ‘./file’或@import |<br>| style-loader | Adds CSS to the DOM by injecting a <style> tag 开发模式使用 |<br>| mini-css-extract-plugin | This plugin extracts CSS into separate files. extract-text-webpack-plugin 只支持 webpack 4 以下提取 CSS 文件，那么 webpack 4及以上需要使用mini-css-extract-plugin提取css文件。 [官方文档：<a href="https://webpack.js.org/plugins/mini-css-extract-plugin/">https://webpack.js.org/plugins/mini-css-extract-plugin/</a>] 【注】：这个插件只能在production模式下没有style-loader加载链的构建中使用 |<br>| sass-loader | Loads a SASS/SCSS file and compiles it to CSS. |</li>
+</ul>
+</style></li></ul>
       
     </div>
 
