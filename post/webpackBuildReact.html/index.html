@@ -103,7 +103,7 @@
 <meta property="og:image" content="http://yoursite.com/uploads/webpackBuildReact/init.png">
 <meta property="og:image" content="http://yoursite.com/uploads/webpackBuildReact/init2.png">
 <meta property="og:image" content="http://yoursite.com/uploads/webpackBuildReact/init3.png">
-<meta property="og:updated_time" content="2019-03-13T14:51:01.237Z">
+<meta property="og:updated_time" content="2019-03-13T14:55:33.902Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="react+webpack+es6组合">
 <meta name="twitter:description" content="1.首先全局安装webpack : npm install webpack -g 2.创建空项目buildReactPro，然后初始化项目：npm init 生成package.json基础格式文件： 3.局部安装webpack：npm install webpack –save-dev（参数 –save-dev 意思是开发时依赖webpack）注：至于为什么webpack(webpack-dev">
@@ -377,6 +377,12 @@
 <p>生成package.json基础格式文件：</p>
 <p><img src="/uploads/webpackBuildReact/init2.png" alt="project-init2"><br>3.局部安装webpack：npm install webpack –save-dev（参数 –save-dev 意思是开发时依赖webpack）<br><img src="/uploads/webpackBuildReact/init3.png" alt="project-init3"><br>注：至于为什么webpack(webpack-dev-server)要全局安装也要局部安装 ：<br>全局安装之后，才可以使用webpack(webpack-dev-server)命令。<br>局部安装，为了保存到package.json文件中。</p>
 <p>4.单纯执行webpack/webpack-dev-server命令时默认执行webpack.config.js文件。<br>5.创建配置文件</p>
+<ul>
+<li>开发环境(development)和生产环境(production)的构建目标差异很大。在开发环境中，我们需要具有强大的、具有实时重新加载(live reloading)或热模块替换(hot module replacement)能力的 source map 和 localhost server。</li>
+<li>而在生产环境中，我们的目标则转向于关注更小的 bundle，更轻量的 source map，以及更优化的资源，以改善加载时间。由于要遵循逻辑分离，我们通常建议为每个环境编写彼此独立的 webpack 配置。</li>
+<li>虽然，以上我们将生产环境和开发环境做了略微区分，但是，请注意，我们还是会遵循不重复原则(Don’t repeat yourself - DRY)，保留一个“通用”配置。为了将这些配置合并在一起，</li>
+<li>我们将使用一个名为 webpack-merge 的工具。通过“通用”配置，我们不必在环境特定(environment-specific)的配置中重复代码<br>参考：<a href="https://webpack.docschina.org/guides/production/" target="_blank" rel="external">https://webpack.docschina.org/guides/production/</a></li>
+</ul>
 
       
     </div>
