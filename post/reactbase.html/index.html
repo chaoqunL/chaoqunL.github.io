@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="诸己的博客">
 <meta property="og:description" content="一、遇到的问题&amp;amp;想到的优化方法： 第一个坑。问题：在循环玩法poi列表时，遇到list[obj1,obj2]结构的数据，使用map生成组件时报错（警告）：a key should beprovided for list items。Example:12345678910111213function NumberList(props) &amp;#123;  const numbers = prop">
 <meta property="og:image" content="http://yoursite.com/uploads/reactbase/base1.png">
-<meta property="og:updated_time" content="2019-03-31T13:35:39.566Z">
+<meta property="og:updated_time" content="2019-03-31T13:39:20.513Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="react基础踩坑总结">
 <meta name="twitter:description" content="一、遇到的问题&amp;amp;想到的优化方法： 第一个坑。问题：在循环玩法poi列表时，遇到list[obj1,obj2]结构的数据，使用map生成组件时报错（警告）：a key should beprovided for list items。Example:12345678910111213function NumberList(props) &amp;#123;  const numbers = prop">
@@ -394,6 +394,12 @@
 </ol>
 <ul>
 <li>组件可以被申明成类或函数，函数组件定义简单，但是他缺乏目前仅用于类的一些功能。虽然函数组件有很多限制，但是直到现在还有人使用，是因为函数组件容易理解，建议在不需要自己的state,lifecycle hooks,或性能优化的情况下使用函数组件–引用自展示组件与容器组件：<a href="https://juejin.im/post/5a52fe32f265da3e317e008b" target="_blank" rel="external">https://juejin.im/post/5a52fe32f265da3e317e008b</a></li>
+<li>函数组件为什么性能更优？<br>React.Component是以ES6的形式来创建React组件，也是现在React官方推荐的创建组件的方式，其和React.createClass创建的组件一样，也是创建有状态的组件。无状态的函数创建的组件是无状态组件，它是一种只负责展示的纯组件。这种模式被鼓励在大型项目中尽可能以简单的写法 来分割原本庞大的组件，而未来 React 也会面向这种无状态的组件进行一些专门的优化，比如避免无意义的检查或内存分配。所以建议大家尽可能在项目中使用无状态组件。<ol>
+<li>组件不会被实例化，整体渲染性能得到提升：<br>因为组件被精简成一个render方法的函数来实现的，由于是无状态组件，所以无状态组件就不会在有组件实例化的过程，无实例化过程也    </li>
+<li>就不需要分配多余的内存，从而性能得到一定的提升。<br>组件不能访问this对象。</li>
+<li>组件无法访问生命周期的方法，因为无状态组件是不需要组件生命周期管理和状态管理，所以底层实现这种形式的组件时是不会实现组件的生命周期方法。所以无状态组件是不能参与组件的各个生命周期管理。</li>
+</ol>
+</li>
 </ul>
 <p><strong>欢迎转载，请注明本文的链接地址：</strong></p>
 <p><a href="https://chaoqunl.cc/post/reactbase.html" target="_blank" rel="external">https://chaoqunl.cc/post/reactbase.html</a></p>
