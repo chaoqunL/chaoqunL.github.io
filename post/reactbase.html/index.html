@@ -103,7 +103,10 @@
 <meta property="og:image" content="http://yoursite.com/uploads/reactbase/base1.png">
 <meta property="og:image" content="http://yoursite.com/uploads/reactbase/base2.png">
 <meta property="og:image" content="http://yoursite.com/uploads/reactbase/base3.png">
-<meta property="og:updated_time" content="2019-03-31T13:49:36.493Z">
+<meta property="og:image" content="http://yoursite.com/uploads/reactbase/base4.png">
+<meta property="og:image" content="http://yoursite.com/uploads/reactbase/base5.png">
+<meta property="og:image" content="http://yoursite.com/uploads/reactbase/base6.png">
+<meta property="og:updated_time" content="2019-03-31T13:56:16.927Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="react基础踩坑总结">
 <meta name="twitter:description" content="一、遇到的问题&amp;amp;想到的优化方法：第一个坑问题：在循环玩法poi列表时，遇到list[obj1,obj2]结构的数据，使用map生成组件时报错（警告）：a key should beprovided for list items。Example:12345678910111213function NumberList(props) &amp;#123;  const numbers = props.">
@@ -403,7 +406,19 @@
 <h4 id="第3个坑"><a href="#第3个坑" class="headerlink" title="第3个坑"></a>第3个坑</h4><p>问题：<br>按照页面图将组件划分为从上至下几个大块，没有合理的与图层、数据结构相结合来划分组件层级，导致多人很容易修改到同一个组件，冲突不断，不易多人维护。<br>修改：<br>划分组件的原则是什么？要和目录结构一起修改：</p>
 <ol>
 <li>组合组件：组件可以在它的输出中引用其它组件，这就可以让我们用同一组件来抽象出任意层次的细节。在React应用中，按钮、表单、对话框、整个屏幕的内容等，这些通常都被表示为组件。<br><img src="/uploads/reactbase/base2.png" alt="project-base2"><br><img src="/uploads/reactbase/base3.png" alt="project-base3"></li>
-<li>提取组件:你可以将组件切分为更小的组件，这没什么好担心的（建议从组件自身的角度来命名props，而不是根据使用组件的上下文命名，如下面的user字段取自父组件的author字段）</li>
+<li>提取组件:你可以将组件切分为更小的组件，这没什么好担心的（建议从组件自身的角度来命名props，而不是根据使用组件的上下文命名，如下面的user字段取自父组件的author字段）<br><img src="/uploads/reactbase/base4.png" alt="project-base4"><br><img src="/uploads/reactbase/base5.png" alt="project-base5"><br>提取组件一开始看起来像是一项单调乏味的工作，但是在大型应用中，构建可复用的组件完全是值得的。当你的UI中有一部分重复使用了好几次（比如，Button、Panel、Avatar），或者其自身就足够复杂（比如，App、FeedStory、Comment），类似这些都是抽象成一个可复用组件的绝佳选择，这也是一个比较好的做法。<br>参考<a href="https://react.docschina.org/docs/components-and-props.html" target="_blank" rel="external">https://react.docschina.org/docs/components-and-props.html</a></li>
+<li>根据【react理念】进阶:<ul>
+<li>把 UI 划分出组件层级<br><img src="/uploads/reactbase/base6.png" alt="project-base6"><br>原型图中的子组件在层级结构中应该作为子节点:</li>
+<li>用 React 创建一个静态版本：<ol>
+<li>现在有了组件层级，是时候去实现你的应用了。最简单的方式是先创建一个静态版本：传入数据模型，渲染 UI 但没有任何交互。最好把这些过程解耦，因为创建一个静态版本更多需要的是码代码，不太需要逻辑思考。</li>
+<li>要构建一个用于呈现数据模型的静态版本的应用程序，你需要创建能够复用其他组件的组件，并通过 props 来传递数据。props 是一种从父级向子级传递数据的方法。 在创建静态版本的时候不要使用 state。State 只在交互的时候使用。</li>
+<li>定义 UI 状态的最小(但完整)表示<br>引入state</li>
+<li>确定你的 State 应该位于哪里</li>
+<li>添加反向数据流<br>事件绑定onchange\xxx</li>
+</ol>
+</li>
+</ul>
+</li>
 </ol>
 <p><strong>欢迎转载，请注明本文的链接地址：</strong></p>
 <p><a href="https://chaoqunl.cc/post/reactbase.html" target="_blank" rel="external">https://chaoqunl.cc/post/reactbase.html</a></p>
