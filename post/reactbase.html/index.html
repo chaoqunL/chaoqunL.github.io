@@ -106,7 +106,7 @@
 <meta property="og:image" content="http://yoursite.com/uploads/reactbase/base4.png">
 <meta property="og:image" content="http://yoursite.com/uploads/reactbase/base5.png">
 <meta property="og:image" content="http://yoursite.com/uploads/reactbase/base6.png">
-<meta property="og:updated_time" content="2019-03-31T13:58:27.196Z">
+<meta property="og:updated_time" content="2019-03-31T14:00:45.591Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="react基础踩坑总结">
 <meta name="twitter:description" content="一、遇到的问题&amp;amp;想到的优化方法：第一个坑问题：在循环玩法poi列表时，遇到list[obj1,obj2]结构的数据，使用map生成组件时报错（警告）：a key should beprovided for list items。Example:12345678910111213function NumberList(props) &amp;#123;  const numbers = props.">
@@ -420,6 +420,7 @@
 </ul>
 </li>
 </ol>
+<h3 id="第4个坑"><a href="#第4个坑" class="headerlink" title="第4个坑"></a>第4个坑</h3><p>问题：<br>初版中所有的组件定义都是通过extends React.Component的方式实现的，<br>重构中改为在合适的情况使用extends PureComponent创建组件。<br>修改：<br>PureComponent的使用：<br>【React.PureComponent】 is similar to React.Component. The difference between them isthat React.Component doesn’t implement shouldComponentUpdate(), but React.PureComponent implements it with a shallow prop and state comparison.<br>If your React component’s render() function renders the same result given the same props and state, you can use React.PureComponent for a performance boost in some cases.<br>注：React.PureComponent’s shouldComponentUpdate() only shallowly compares the objects<br>【总结】React15.3中新加了一个 PureComponent 类，顾名思义， pure 是纯的意思，PureComponent也就是纯组件，取代其前身 PureRenderMixin ,PureComponent 是优化 React 应用程序最重要的方法之一，易于实施，只要把继承类从 Component 换成 PureComponent 即可，可以减少不必要的 render 操作的次数，从而提高性能，而且可以少写 shouldComponentUpdate 函数，节省了点代码。</p>
 <p><strong>欢迎转载，请注明本文的链接地址：</strong></p>
 <p><a href="https://chaoqunl.cc/post/reactbase.html" target="_blank" rel="external">https://chaoqunl.cc/post/reactbase.html</a></p>
 
@@ -616,7 +617,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、遇到的问题-amp-想到的优化方法："><span class="nav-number">1.</span> <span class="nav-text">一、遇到的问题&想到的优化方法：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#第一个坑"><span class="nav-number">1.1.</span> <span class="nav-text">第一个坑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第2个坑"><span class="nav-number">1.2.</span> <span class="nav-text">第2个坑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第3个坑"><span class="nav-number">1.3.</span> <span class="nav-text">第3个坑</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、遇到的问题-amp-想到的优化方法："><span class="nav-number">1.</span> <span class="nav-text">一、遇到的问题&想到的优化方法：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#第一个坑"><span class="nav-number">1.1.</span> <span class="nav-text">第一个坑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第2个坑"><span class="nav-number">1.2.</span> <span class="nav-text">第2个坑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第3个坑"><span class="nav-number">1.3.</span> <span class="nav-text">第3个坑</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第4个坑"><span class="nav-number">2.</span> <span class="nav-text">第4个坑</span></a></li></ol></div>
             
 
           </div>
