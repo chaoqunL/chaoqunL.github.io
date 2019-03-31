@@ -106,7 +106,8 @@
 <meta property="og:image" content="http://yoursite.com/uploads/reactbase/base4.png">
 <meta property="og:image" content="http://yoursite.com/uploads/reactbase/base5.png">
 <meta property="og:image" content="http://yoursite.com/uploads/reactbase/base6.png">
-<meta property="og:updated_time" content="2019-03-31T14:00:45.591Z">
+<meta property="og:image" content="http://yoursite.com/uploads/reactbase/base7.png">
+<meta property="og:updated_time" content="2019-03-31T14:05:47.525Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="react基础踩坑总结">
 <meta name="twitter:description" content="一、遇到的问题&amp;amp;想到的优化方法：第一个坑问题：在循环玩法poi列表时，遇到list[obj1,obj2]结构的数据，使用map生成组件时报错（警告）：a key should beprovided for list items。Example:12345678910111213function NumberList(props) &amp;#123;  const numbers = props.">
@@ -420,7 +421,11 @@
 </ul>
 </li>
 </ol>
-<h3 id="第4个坑"><a href="#第4个坑" class="headerlink" title="第4个坑"></a>第4个坑</h3><p>问题：<br>初版中所有的组件定义都是通过extends React.Component的方式实现的，<br>重构中改为在合适的情况使用extends PureComponent创建组件。<br>修改：<br>PureComponent的使用：<br>【React.PureComponent】 is similar to React.Component. The difference between them isthat React.Component doesn’t implement shouldComponentUpdate(), but React.PureComponent implements it with a shallow prop and state comparison.<br>If your React component’s render() function renders the same result given the same props and state, you can use React.PureComponent for a performance boost in some cases.<br>注：React.PureComponent’s shouldComponentUpdate() only shallowly compares the objects<br>【总结】React15.3中新加了一个 PureComponent 类，顾名思义， pure 是纯的意思，PureComponent也就是纯组件，取代其前身 PureRenderMixin ,PureComponent 是优化 React 应用程序最重要的方法之一，易于实施，只要把继承类从 Component 换成 PureComponent 即可，可以减少不必要的 render 操作的次数，从而提高性能，而且可以少写 shouldComponentUpdate 函数，节省了点代码。</p>
+<h3 id="第4个坑"><a href="#第4个坑" class="headerlink" title="第4个坑"></a>第4个坑</h3><p>问题：<br>初版中所有的组件定义都是通过extends React.Component的方式实现的，<br>重构中改为在合适的情况使用extends PureComponent创建组件。<br>修改：<br>PureComponent的使用：<br>【React.PureComponent】 is similar to React.Component. The difference between them isthat React.Component doesn’t implement shouldComponentUpdate(), but React.PureComponent implements it with a shallow prop and state comparison.<br>If your React component’s render() function renders the same result given the same props and state, you can use React.PureComponent for a performance boost in some cases.<br>注：React.PureComponent’s shouldComponentUpdate() only shallowly compares the objects<br>【总结】React15.3中新加了一个 PureComponent 类，顾名思义， pure 是纯的意思，PureComponent也就是纯组件，取代其前身 PureRenderMixin ,PureComponent 是优化 React 应用程序最重要的方法之一，易于实施，只要把继承类从 Component 换成 PureComponent 即可，可以减少不必要的 render 操作的次数，从而提高性能，而且可以少写 shouldComponentUpdate 函数，节省了点代码。<br>原理&amp;建议：<br>【Use shouldComponentUpdate()】 to let React know if a component’s output is not affected by the current change in state or props. The default behavior is to re-render on every state change, and in the vast majority of cases you should rely on the default behavior.<br>【shouldComponentUpdate()】 is invoked before rendering when new props or state are being received. Defaults to true. This method is not called for the initial render or when forceUpdate() is used.<br>注：</p>
+<ol>
+<li>shouldComponentUpdate()默认返回true的表现是只要props重新接收或者state被set（即使是改为相同的数值）也会返回true,导致进入render函数，进入render函数后-&gt;React 会构建新的 virtual DOM，使用 diff 算法把新老的 virtual DOM 进行比较，如果新老 virtual DOM 树不相等则将不同之处部分更新，相等则不重新渲染。<br><img src="/uploads/reactbase/base7.png" alt="project-base7"></li>
+<li>shouldComponentUpdate()返回false则不会进入render。</li>
+</ol>
 <p><strong>欢迎转载，请注明本文的链接地址：</strong></p>
 <p><a href="https://chaoqunl.cc/post/reactbase.html" target="_blank" rel="external">https://chaoqunl.cc/post/reactbase.html</a></p>
 
