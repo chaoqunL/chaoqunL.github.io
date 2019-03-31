@@ -93,18 +93,18 @@
 
 
 
-<meta name="description" content="一、遇到的问题&amp;amp;想到的优化方法： 第一个坑。问题：在循环玩法poi列表时，遇到list[obj1,obj2]结构的数据，使用map生成组件时报错（警告）：a key should beprovided for list items。Example:12345678910111213function NumberList(props) &amp;#123;  const numbers = prop">
+<meta name="description" content="一、遇到的问题&amp;amp;想到的优化方法：第一个坑问题：在循环玩法poi列表时，遇到list[obj1,obj2]结构的数据，使用map生成组件时报错（警告）：a key should beprovided for list items。Example:12345678910111213function NumberList(props) &amp;#123;  const numbers = props.">
 <meta name="keywords" content="前端,react">
 <meta property="og:type" content="article">
 <meta property="og:title" content="react基础踩坑总结">
 <meta property="og:url" content="http://yoursite.com/post/reactbase.html/index.html">
 <meta property="og:site_name" content="诸己的博客">
-<meta property="og:description" content="一、遇到的问题&amp;amp;想到的优化方法： 第一个坑。问题：在循环玩法poi列表时，遇到list[obj1,obj2]结构的数据，使用map生成组件时报错（警告）：a key should beprovided for list items。Example:12345678910111213function NumberList(props) &amp;#123;  const numbers = prop">
+<meta property="og:description" content="一、遇到的问题&amp;amp;想到的优化方法：第一个坑问题：在循环玩法poi列表时，遇到list[obj1,obj2]结构的数据，使用map生成组件时报错（警告）：a key should beprovided for list items。Example:12345678910111213function NumberList(props) &amp;#123;  const numbers = props.">
 <meta property="og:image" content="http://yoursite.com/uploads/reactbase/base1.png">
-<meta property="og:updated_time" content="2019-03-31T13:40:18.439Z">
+<meta property="og:updated_time" content="2019-03-31T13:42:03.029Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="react基础踩坑总结">
-<meta name="twitter:description" content="一、遇到的问题&amp;amp;想到的优化方法： 第一个坑。问题：在循环玩法poi列表时，遇到list[obj1,obj2]结构的数据，使用map生成组件时报错（警告）：a key should beprovided for list items。Example:12345678910111213function NumberList(props) &amp;#123;  const numbers = prop">
+<meta name="twitter:description" content="一、遇到的问题&amp;amp;想到的优化方法：第一个坑问题：在循环玩法poi列表时，遇到list[obj1,obj2]结构的数据，使用map生成组件时报错（警告）：a key should beprovided for list items。Example:12345678910111213function NumberList(props) &amp;#123;  const numbers = props.">
 <meta name="twitter:image" content="http://yoursite.com/uploads/reactbase/base1.png">
 
 
@@ -370,10 +370,7 @@
       
 
       
-        <h3 id="一、遇到的问题-amp-想到的优化方法："><a href="#一、遇到的问题-amp-想到的优化方法：" class="headerlink" title="一、遇到的问题&amp;想到的优化方法："></a>一、遇到的问题&amp;想到的优化方法：</h3><ol>
-<li>第一个坑。<br>问题：<br>在循环玩法poi列表时，遇到list[obj1,obj2]结构的数据，<br>使用map生成组件时报错（警告）：a key should be<br>provided for list items。<br><strong>Example:</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">function NumberList(props) &#123;</div><div class="line">  const numbers = props.numbers;</div><div class="line"> const listItems = </div><div class="line">numbers.map((number) =&gt;  &lt;li&gt;&#123;number&#125;&lt;/li&gt;  );  </div><div class="line">  return (</div><div class="line"> &lt;ul&gt;&#123;listItems&#125;&lt;/ul&gt;   );</div><div class="line">&#125;</div><div class="line"></div><div class="line">const numbers = [1, 2, 3, 4, 5];</div><div class="line">ReactDOM.render(</div><div class="line"> &lt;NumberList numbers=&#123;numbers&#125; /&gt;,   </div><div class="line">document.getElementById(&apos;root&apos;)</div><div class="line">);</div></pre></td></tr></table></figure>
-</li>
-</ol>
+        <h3 id="一、遇到的问题-amp-想到的优化方法："><a href="#一、遇到的问题-amp-想到的优化方法：" class="headerlink" title="一、遇到的问题&amp;想到的优化方法："></a>一、遇到的问题&amp;想到的优化方法：</h3><h4 id="第一个坑"><a href="#第一个坑" class="headerlink" title="第一个坑"></a>第一个坑</h4><p>问题：<br>在循环玩法poi列表时，遇到list[obj1,obj2]结构的数据，<br>使用map生成组件时报错（警告）：a key should be<br>provided for list items。<br><strong>Example:</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">function NumberList(props) &#123;</div><div class="line">  const numbers = props.numbers;</div><div class="line"> const listItems = </div><div class="line">numbers.map((number) =&gt;  &lt;li&gt;&#123;number&#125;&lt;/li&gt;  );  </div><div class="line">  return (</div><div class="line"> &lt;ul&gt;&#123;listItems&#125;&lt;/ul&gt;   );</div><div class="line">&#125;</div><div class="line"></div><div class="line">const numbers = [1, 2, 3, 4, 5];</div><div class="line">ReactDOM.render(</div><div class="line"> &lt;NumberList numbers=&#123;numbers&#125; /&gt;,   </div><div class="line">document.getElementById(&apos;root&apos;)</div><div class="line">);</div></pre></td></tr></table></figure></p>
 <p>修改：<br>列表元素需要用key标识-&gt;给每个列表元素分配一个 key。<br><strong>Example:</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">function NumberList(props) &#123;</div><div class="line">  const numbers = props.numbers;</div><div class="line">  const listItems = numbers.map((number) =&gt;</div><div class="line"> &lt;li key=&#123;number.toString()&#125;&gt;       &#123;number&#125;</div><div class="line">    &lt;/li&gt;</div><div class="line">  );</div><div class="line">  return (</div><div class="line">    &lt;ul&gt;&#123;listItems&#125;&lt;/ul&gt;</div><div class="line">  );</div><div class="line">&#125;</div><div class="line"></div><div class="line">const numbers = [1, 2, 3, 4, 5];</div><div class="line">ReactDOM.render(</div><div class="line">  &lt;NumberList numbers=&#123;numbers&#125; /&gt;,</div><div class="line">  document.getElementById(&apos;root&apos;)</div><div class="line">);</div></pre></td></tr></table></figure></p>
 <p>原理&amp;建议：</p>
 <ul>
@@ -389,9 +386,7 @@
 <li><p>更多关于key的使用及必要性参考：<a href="https://react.docschina.org/docs/lists-and-keys.html" target="_blank" rel="external">https://react.docschina.org/docs/lists-and-keys.html</a></p>
 </li>
 </ul>
-<ol>
-<li>第2个坑。<br>问题：<br>滥用类组件，很少用函数组件，总觉的类组件提供的钩子更全便于后续加逻辑拓展。<br>修改：<br>在不需要自己的state,lifecycle hooks,或性能优化的情况下使用函数组件：<br><img src="/uploads/reactbase/base1.png" alt="project-base1"><br>原理&amp;建议：</li>
-</ol>
+<h4 id="第2个坑"><a href="#第2个坑" class="headerlink" title="第2个坑"></a>第2个坑</h4><p>问题：<br>滥用类组件，很少用函数组件，总觉的类组件提供的钩子更全便于后续加逻辑拓展。<br>修改：<br>在不需要自己的state,lifecycle hooks,或性能优化的情况下使用函数组件：<br><img src="/uploads/reactbase/base1.png" alt="project-base1"><br>原理&amp;建议：</p>
 <ul>
 <li>组件可以被申明成类或函数，函数组件定义简单，但是他缺乏目前仅用于类的一些功能。虽然函数组件有很多限制，但是直到现在还有人使用，是因为函数组件容易理解，建议在不需要自己的state,lifecycle hooks,或性能优化的情况下使用函数组件–引用自展示组件与容器组件：<a href="https://juejin.im/post/5a52fe32f265da3e317e008b" target="_blank" rel="external">https://juejin.im/post/5a52fe32f265da3e317e008b</a></li>
 <li>函数组件为什么性能更优？<br>React.Component是以ES6的形式来创建React组件，也是现在React官方推荐的创建组件的方式，其和React.createClass创建的组件一样，也是创建有状态的组件。无状态的函数创建的组件是无状态组件，它是一种只负责展示的纯组件。这种模式被鼓励在大型项目中尽可能以简单的写法 来分割原本庞大的组件，而未来 React 也会面向这种无状态的组件进行一些专门的优化，比如避免无意义的检查或内存分配。所以建议大家尽可能在项目中使用无状态组件。<ol>
@@ -597,7 +592,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、遇到的问题-amp-想到的优化方法："><span class="nav-number">1.</span> <span class="nav-text">一、遇到的问题&想到的优化方法：</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、遇到的问题-amp-想到的优化方法："><span class="nav-number">1.</span> <span class="nav-text">一、遇到的问题&想到的优化方法：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#第一个坑"><span class="nav-number">1.1.</span> <span class="nav-text">第一个坑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第2个坑"><span class="nav-number">1.2.</span> <span class="nav-text">第2个坑</span></a></li></ol></li></ol></div>
             
 
           </div>
