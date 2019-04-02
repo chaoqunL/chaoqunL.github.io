@@ -93,19 +93,17 @@
 
 
 
-<meta name="description" content="css基础学习框架图：只是当时学习时脑子里的结构图，可能不够完善,见谅哈   这是本人2015年刚刚入门学习前端时，实习导师建议画的，传上来给初学者做个参考吧。 欢迎转载，请注明本文的链接地址： https://chaoqunl.cc/post/css-structure.html">
+<meta name="description" content="Why do I have to use “className” instead of “class” in ReactJs components done in JSX? JSX is preprocessed, so shouldn’t that conversion happen when JSX is converted to JavaScript? Sophie Alpert, work">
 <meta name="keywords" content="前端,css">
 <meta property="og:type" content="article">
-<meta property="og:title" content="css基础学习框架">
-<meta property="og:url" content="http://yoursite.com/post/css-structure.html/index.html">
+<meta property="og:title" content="iconfont的基础及使用">
+<meta property="og:url" content="http://yoursite.com/post/classname.html/index.html">
 <meta property="og:site_name" content="诸己的博客">
-<meta property="og:description" content="css基础学习框架图：只是当时学习时脑子里的结构图，可能不够完善,见谅哈   这是本人2015年刚刚入门学习前端时，实习导师建议画的，传上来给初学者做个参考吧。 欢迎转载，请注明本文的链接地址： https://chaoqunl.cc/post/css-structure.html">
-<meta property="og:image" content="http://yoursite.com/uploads/css-structure/1.jpg">
-<meta property="og:updated_time" content="2017-09-16T08:32:11.000Z">
+<meta property="og:description" content="Why do I have to use “className” instead of “class” in ReactJs components done in JSX? JSX is preprocessed, so shouldn’t that conversion happen when JSX is converted to JavaScript? Sophie Alpert, work">
+<meta property="og:updated_time" content="2019-04-02T09:25:48.865Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="css基础学习框架">
-<meta name="twitter:description" content="css基础学习框架图：只是当时学习时脑子里的结构图，可能不够完善,见谅哈   这是本人2015年刚刚入门学习前端时，实习导师建议画的，传上来给初学者做个参考吧。 欢迎转载，请注明本文的链接地址： https://chaoqunl.cc/post/css-structure.html">
-<meta name="twitter:image" content="http://yoursite.com/uploads/css-structure/1.jpg">
+<meta name="twitter:title" content="iconfont的基础及使用">
+<meta name="twitter:description" content="Why do I have to use “className” instead of “class” in ReactJs components done in JSX? JSX is preprocessed, so shouldn’t that conversion happen when JSX is converted to JavaScript? Sophie Alpert, work">
 
 
 
@@ -133,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/post/css-structure.html/"/>
+  <link rel="canonical" href="http://yoursite.com/post/classname.html/"/>
 
 
 
 
 
-  <title>css基础学习框架 | 诸己的博客</title>
+  <title>iconfont的基础及使用 | 诸己的博客</title>
   
 
 
@@ -268,7 +266,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/post/css-structure.html/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/post/classname.html/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="诸己">
@@ -285,7 +283,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">css基础学习框架</h1>
+          <h1 class="post-title" itemprop="name headline">iconfont的基础及使用</h1>
         
 
         <div class="post-meta">
@@ -297,8 +295,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-16T16:32:11+08:00">
-                2017-09-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-02T17:22:50+08:00">
+                2019-04-02
               </time>
             
 
@@ -370,12 +368,14 @@
       
 
       
-        <h2 id="css基础学习框架图："><a href="#css基础学习框架图：" class="headerlink" title="css基础学习框架图："></a>css基础学习框架图：</h2><p>只是当时学习时脑子里的结构图，可能不够完善,见谅哈</p>
-<p><img src="/uploads/css-structure/1.jpg" alt="HTTPS握手过程1"></p>
-<hr>
-<p>这是本人2015年刚刚入门学习前端时，实习导师建议画的，传上来给初学者做个参考吧。</p>
+        <h4 id="Why-do-I-have-to-use-“className”-instead-of-“class”-in-ReactJs-components-done-in-JSX-JSX-is-preprocessed-so-shouldn’t-that-conversion-happen-when-JSX-is-converted-to-JavaScript"><a href="#Why-do-I-have-to-use-“className”-instead-of-“class”-in-ReactJs-components-done-in-JSX-JSX-is-preprocessed-so-shouldn’t-that-conversion-happen-when-JSX-is-converted-to-JavaScript" class="headerlink" title="Why do I have to use “className” instead of “class” in ReactJs components done in JSX? JSX is preprocessed, so shouldn’t that conversion happen when JSX is converted to JavaScript?"></a>Why do I have to use “className” instead of “class” in ReactJs components done in JSX? JSX is preprocessed, so shouldn’t that conversion happen when JSX is converted to JavaScript?</h4><blockquote>
+<p>Sophie Alpert, works at Facebook<br>Answered Jun 29 2015<br>We certainly could have done it the other way around. I argued for that for a while. There are transforms that convert this.props.class to this.props[‘class’] and so using the names class and for would be nearly seamless. Babel includes one. We’re sticking with className and htmlFor for a couple of reasons:</p>
+</blockquote>
+<p>First, we tend to look at HTML properties (like el.className = …) when possible, as opposed to attributes (like el.setAttribute(‘class’, …)). Attributes are always string-typed, while properties can have any JavaScript object value, which gives more flexibility in some circumstances. One example is the .classList property, which arguably is a better fit for the data model than .className is. React doesn’t support classList right now, but it certainly could. Given that React’s className behaves like the HTML property of the same name, it makes sense to keep that name.</p>
+<p>Another reason is more forward-thinking. In the future, idiomatic React may use object destructuring to pick apart this.props. The react-future repo shows one example of how this could work. Even in modern browsers, this wouldn’t work with class and for which are keywords and can’t appear as standalone identifiers even though they can appear as property names.</p>
+<p>Third, our thinking is that JSX’s primary advantage is the symmetry of matching closing tags which make code easier to read, not the direct resemblance to HTML or XML. It’s convenient to copy/paste HTML directly, but other minor differences (in self-closing tags, for example) make this a losing battle and we have a HTML to JSX converter to help you anyway. Finally, to translate HTML to idiomatic React code, a fair amount of work is usually involved in breaking up the markup into components that make sense, so changing class to className is only a small part of that anyway.</p>
 <p><strong>欢迎转载，请注明本文的链接地址：</strong></p>
-<p><a href="https://chaoqunl.cc/post/css-structure.html" target="_blank" rel="external">https://chaoqunl.cc/post/css-structure.html</a></p>
+<p><a href="https://chaoqunl.cc/post/classname.html" target="_blank" rel="external">https://chaoqunl.cc/post/classname.html</a></p>
 
       
     </div>
@@ -420,15 +420,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/post/reactbase.html/" rel="next" title="react基础踩坑总结">
+                <i class="fa fa-chevron-left"></i> react基础踩坑总结
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/post/ngCustomForm.html/" rel="prev" title="angular自定义表单组件总结">
-                angular自定义表单组件总结 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -570,7 +570,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#css基础学习框架图："><span class="nav-number">1.</span> <span class="nav-text">css基础学习框架图：</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Why-do-I-have-to-use-“className”-instead-of-“class”-in-ReactJs-components-done-in-JSX-JSX-is-preprocessed-so-shouldn’t-that-conversion-happen-when-JSX-is-converted-to-JavaScript"><span class="nav-number">1.</span> <span class="nav-text">Why do I have to use “className” instead of “class” in ReactJs components done in JSX? JSX is preprocessed, so shouldn’t that conversion happen when JSX is converted to JavaScript?</span></a></li></ol></div>
             
 
           </div>
