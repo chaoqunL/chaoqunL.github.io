@@ -100,7 +100,7 @@
 <meta property="og:url" content="http://yoursite.com/post/classname.html/index.html">
 <meta property="og:site_name" content="诸己的博客">
 <meta property="og:description" content="Why do I have to use “className” instead of “class” in ReactJs components done in JSX? JSX is preprocessed, so shouldn’t that conversion happen when JSX is converted to JavaScript? Sophie Alpert, work">
-<meta property="og:updated_time" content="2019-04-02T10:57:50.850Z">
+<meta property="og:updated_time" content="2019-04-03T06:14:21.872Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Why do I have to use &quot;className&quot;">
 <meta name="twitter:description" content="Why do I have to use “className” instead of “class” in ReactJs components done in JSX? JSX is preprocessed, so shouldn’t that conversion happen when JSX is converted to JavaScript? Sophie Alpert, work">
@@ -375,7 +375,7 @@
 <p>First, we tend to look at HTML properties (like el.className = …) when possible, as opposed to attributes (like el.setAttribute(‘class’, …)). Attributes are always string-typed, while properties can have any JavaScript object value, which gives more flexibility in some circumstances. One example is the .classList property, which arguably is a better fit for the data model than .className is. React doesn’t support classList right now, but it certainly could. Given that React’s className behaves like the HTML property of the same name, it makes sense to keep that name.</p>
 <p>Another reason is more forward-thinking. In the future, idiomatic React may use object destructuring to pick apart this.props. The react-future repo shows one example of how this could work. Even in modern browsers, this wouldn’t work with class and for which are keywords and can’t appear as standalone identifiers even though they can appear as property names.</p>
 <p>Third, our thinking is that JSX’s primary advantage is the symmetry of matching closing tags which make code easier to read, not the direct resemblance to HTML or XML. It’s convenient to copy/paste HTML directly, but other minor differences (in self-closing tags, for example) make this a losing battle and we have a HTML to JSX converter to help you anyway. Finally, to translate HTML to idiomatic React code, a fair amount of work is usually involved in breaking up the markup into components that make sense, so changing class to className is only a small part of that anyway.</p>
-<p>翻译参考：<a href="https://www.jackpu.com/you-qu-de-hua-ti-wei-shi-yao-jsxyong-classnameer-bu-shi-class/" target="_blank" rel="external">https://www.jackpu.com/you-qu-de-hua-ti-wei-shi-yao-jsxyong-classnameer-bu-shi-class/</a></p>
+<p>翻译参考：<a href="https://www.jackpu.com/you-qu-de-hua-ti-wei-shi-yao-jsxyong-classnameer-bu-shi-class/" target="_blank" rel="external">https://www.jackpu.com/you-qu-de-hua-ti-wei-shi-yao-jsxyong-classnameer-bu-shi-class/</a><br>基础：<a href="https://www.w3cplus.com/javascript/dom-attributes-and-properties.html" target="_blank" rel="external">https://www.w3cplus.com/javascript/dom-attributes-and-properties.html</a></p>
 <p><strong>欢迎转载，请注明本文的链接地址：</strong></p>
 <p><a href="https://chaoqunl.cc/post/classname.html" target="_blank" rel="external">https://chaoqunl.cc/post/classname.html</a></p>
 
