@@ -103,7 +103,10 @@
 <meta property="og:image" content="http://yoursite.com/uploads/router-hash/aim1.png">
 <meta property="og:image" content="http://yoursite.com/uploads/router-hash/aim2.png">
 <meta property="og:image" content="http://yoursite.com/uploads/router-hash/aim3.png">
-<meta property="og:updated_time" content="2019-04-15T13:47:36.500Z">
+<meta property="og:image" content="http://yoursite.com/uploads/router-hash/hash1.png">
+<meta property="og:image" content="http://yoursite.com/uploads/router-hash/hash2.png">
+<meta property="og:image" content="http://yoursite.com/uploads/router-hash/hash3.png">
+<meta property="og:updated_time" content="2019-04-15T13:53:59.033Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="两种常见路由方式对比-关于hash">
 <meta name="twitter:description" content="定义：hash 属性是一个可读可写的字符串，该字符串是 URL 的锚部分（从 # 号开始的部分）(本文参考链接：https://github.com/youngwind/blog/issues/109https://github.com/joeyguo/blog/issues/2)url 上的 hash 本意是用来作锚点的，方便用户在一个很长的文档里进行上下的导航，用来做 SPA 的路由控制并非">
@@ -387,6 +390,12 @@
 <li>route 存储路由更新时的回调到回调数组routes中，回调函数将负责对页面的更新</li>
 <li>refresh 执行当前url对应的回调函数，更新页面</li>
 </ul>
+<ol>
+<li><p>页面初始化时不设置hash-现象：<br><img src="/uploads/router-hash/hash1.png" alt="hash-effect1"><br>点击“turn white”:<br><img src="/uploads/router-hash/hash2.png" alt="hash-effect2"><br>点击“turn blue”或“turn green”等其他路由：<br><img src="/uploads/router-hash/hash3.png" alt="hash-effect3"></p>
+</li>
+<li><p>页面初始化时设置hash-现象：</p>
+</li>
+</ol>
 <p><strong>欢迎转载，请注明本文的链接地址：</strong></p>
 <p><a href="https://chaoqunl.cc/post/router-hash.html" target="_blank" rel="external">https://chaoqunl.cc/post/router-hash.html</a></p>
 
