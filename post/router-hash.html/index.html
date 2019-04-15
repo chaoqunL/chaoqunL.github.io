@@ -109,7 +109,7 @@
 <meta property="og:image" content="http://yoursite.com/uploads/router-hash/2-1.png">
 <meta property="og:image" content="http://yoursite.com/uploads/router-hash/2-2.png">
 <meta property="og:image" content="http://yoursite.com/uploads/router-hash/other.png">
-<meta property="og:updated_time" content="2019-04-15T14:23:50.599Z">
+<meta property="og:updated_time" content="2019-04-15T14:26:23.411Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="两种常见路由方式对比-关于hash">
 <meta name="twitter:description" content="定义：hash 属性是一个可读可写的字符串，该字符串是 URL 的锚部分（从 # 号开始的部分）(本文参考链接：https://github.com/youngwind/blog/issues/109https://github.com/joeyguo/blog/issues/2)url 上的 hash 本意是用来作锚点的，方便用户在一个很长的文档里进行上下的导航，用来做 SPA 的路由控制并非">
@@ -401,6 +401,7 @@
 <li>可以看到2个例子中切换导航→切换urlhash值导致页面更新的过程中页面没有刷新（重新load）,只是触发了hashChange.<br>实践可以看到手动更改url上的hash也是一样的，案例直接在当前页面更新了背景色，没有重新加载，触发的也是hashChage事件。</li>
 <li>的确可以通过 hash 的改变来对页面进行局部刷新。<br>尤其需要注意的是：在第一次进入页面的时候，如果 url 上已经带有 hash，会同没有设置hash一样触发load事件，<br> 也会进入refresh方法进入hash更新识别，这保证了一开始的 hash 就能被识别。<br>【另外】js方式直接执行window.location = “#xxx”或者location.hash=”#/xxx”也能修改hash路由值。效果如下：<br><img src="/uploads/router-hash/other.png" alt="other"></li>
 </ol>
+<h3 id="hash方式的路由遗留的问题"><a href="#hash方式的路由遗留的问题" class="headerlink" title="hash方式的路由遗留的问题"></a>hash方式的路由遗留的问题</h3><p>虽然 hash 解决了 SPA 路由控制的问题，但是它又引入了新的问题 → url 上会有一个 # 号，很不美观（这在我们的app-&gt;webview上可能会有问题）<br>解决方案：抛弃 hash，使用 history</p>
 <p><strong>欢迎转载，请注明本文的链接地址：</strong></p>
 <p><a href="https://chaoqunl.cc/post/router-hash.html" target="_blank" rel="external">https://chaoqunl.cc/post/router-hash.html</a></p>
 
@@ -597,7 +598,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#长页面锚点"><span class="nav-number">1.</span> <span class="nav-text">长页面锚点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于hash实现简单路由"><span class="nav-number">2.</span> <span class="nav-text">基于hash实现简单路由</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#结论"><span class="nav-number">2.1.</span> <span class="nav-text">结论</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#长页面锚点"><span class="nav-number">1.</span> <span class="nav-text">长页面锚点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于hash实现简单路由"><span class="nav-number">2.</span> <span class="nav-text">基于hash实现简单路由</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#结论"><span class="nav-number">2.1.</span> <span class="nav-text">结论</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hash方式的路由遗留的问题"><span class="nav-number">3.</span> <span class="nav-text">hash方式的路由遗留的问题</span></a></li></ol></div>
             
 
           </div>
