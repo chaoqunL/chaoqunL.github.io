@@ -100,7 +100,7 @@
 <meta property="og:url" content="http://yoursite.com/post/router-hash.html/index.html">
 <meta property="og:site_name" content="诸己的博客">
 <meta property="og:description" content="定义：hash 属性是一个可读可写的字符串，该字符串是 URL 的锚部分（从 # 号开始的部分）本文参考链接：https://github.com/youngwind/blog/issues/109 , https://github.com/joeyguo/blog/issues/2url 上的 hash 本意是用来作锚点的，方便用户在一个很长的文档里进行上下的导航，用来做 SPA 的路由控制并">
-<meta property="og:updated_time" content="2019-04-15T13:33:50.537Z">
+<meta property="og:updated_time" content="2019-04-15T13:35:18.426Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="两种常见路由方式对比-关于hash">
 <meta name="twitter:description" content="定义：hash 属性是一个可读可写的字符串，该字符串是 URL 的锚部分（从 # 号开始的部分）本文参考链接：https://github.com/youngwind/blog/issues/109 , https://github.com/joeyguo/blog/issues/2url 上的 hash 本意是用来作锚点的，方便用户在一个很长的文档里进行上下的导航，用来做 SPA 的路由控制并">
@@ -371,7 +371,7 @@
         <blockquote>
 <p>定义：hash 属性是一个可读可写的字符串，该字符串是 URL 的锚部分（从 # 号开始的部分）<br>本文参考链接：<a href="https://github.com/youngwind/blog/issues/109" target="_blank" rel="external">https://github.com/youngwind/blog/issues/109</a> , <a href="https://github.com/joeyguo/blog/issues/2" target="_blank" rel="external">https://github.com/joeyguo/blog/issues/2</a><br>url 上的 hash 本意是用来作锚点的，方便用户在一个很长的文档里进行上下的导航，用来做 SPA 的路由控制并非它的本意。<br>然而，hash 满足这么一种特性：改变 url 的同时，不刷新页面，再加上浏览器也提供 onhashchange 这样的事件监听，因此，hash 能用来做路由控制。</p>
 </blockquote>
-<p><strong>欢迎转载，请注明本文的链接地址：</strong></p>
+<h3 id="长页面锚点"><a href="#长页面锚点" class="headerlink" title="长页面锚点"></a>长页面锚点</h3><p><strong>欢迎转载，请注明本文的链接地址：</strong></p>
 <p><a href="https://chaoqunl.cc/post/router-hash.html" target="_blank" rel="external">https://chaoqunl.cc/post/router-hash.html</a></p>
 
       
@@ -474,8 +474,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/avatar.png"
@@ -548,6 +557,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#长页面锚点"><span class="nav-number">1.</span> <span class="nav-text">长页面锚点</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
